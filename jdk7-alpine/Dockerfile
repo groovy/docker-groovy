@@ -5,7 +5,14 @@ ENV PATH /opt/groovy/bin:$PATH
 ENV GROOVY_VERSION 2.4.7
 ENV GROOVY_DOWNLOAD_SHA256 438dd6098252647e88ff12ac5737d0d0f7e16a8e4e42e8be3e05a4c43abefbd5
 
-RUN apk add --update ca-certificates openssl unzip && update-ca-certificates
+RUN set -ex \
+	&& apk add --update ca-certificates openssl unzip \
+	&& rm -rf /var/cache/apk/*
+
+# workaround for https://issues.apache.org/jira/browse/GROOVY-7906
+RUN set -ex \
+	&& apk add --update bash && rm -rf /var/cache/apk/* \
+	&& ln -fs /bin/bash /bin/sh
 
 WORKDIR /opt
 RUN set -ex \
