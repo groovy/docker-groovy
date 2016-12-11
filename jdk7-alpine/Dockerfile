@@ -9,7 +9,6 @@ RUN set -ex \
 	&& apk add --update bash unzip \
 	&& rm -rf /var/cache/apk/*
 
-WORKDIR /opt
 RUN set -ex \
 	&& wget "http://dl.bintray.com/groovy/maven/apache-groovy-binary-${GROOVY_VERSION}.zip" \
 	&& echo "$GROOVY_DOWNLOAD_SHA256 *apache-groovy-binary-${GROOVY_VERSION}.zip" | sha256sum -c - \
@@ -29,4 +28,5 @@ RUN set -ex \
 	\
 	&& groovy --version
 
+WORKDIR /opt/groovy
 CMD ["groovysh"]
