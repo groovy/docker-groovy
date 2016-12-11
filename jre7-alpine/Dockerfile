@@ -15,6 +15,7 @@ RUN set -ex \
 	&& echo "$GROOVY_DOWNLOAD_SHA256 *apache-groovy-binary-${GROOVY_VERSION}.zip" | sha256sum -c - \
 	\
 	&& unzip apache-groovy-binary-${GROOVY_VERSION}.zip \
+	&& apk del unzip \
 	&& rm apache-groovy-binary-${GROOVY_VERSION}.zip \
 	&& mv "groovy-${GROOVY_VERSION}" /opt/groovy \
 	\
