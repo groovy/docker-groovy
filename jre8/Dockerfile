@@ -1,9 +1,9 @@
 FROM openjdk:8-jre
 
-ENV PATH /opt/groovy/bin:$PATH
-
 ENV GROOVY_VERSION 2.4.7
 ENV GROOVY_DOWNLOAD_SHA256 438dd6098252647e88ff12ac5737d0d0f7e16a8e4e42e8be3e05a4c43abefbd5
+
+ENV PATH /opt/groovy/bin:$PATH
 
 WORKDIR /opt
 RUN set -ex \

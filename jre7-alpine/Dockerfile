@@ -1,9 +1,9 @@
 FROM openjdk:7-jre-alpine
 
-ENV PATH /opt/groovy/bin:$PATH
-
 ENV GROOVY_VERSION 2.4.7
 ENV GROOVY_DOWNLOAD_SHA256 438dd6098252647e88ff12ac5737d0d0f7e16a8e4e42e8be3e05a4c43abefbd5
+
+ENV PATH /opt/groovy/bin:$PATH
 
 RUN set -ex \
 	&& apk add --update bash unzip \
@@ -19,13 +19,13 @@ RUN set -ex \
 	&& rm apache-groovy-binary-${GROOVY_VERSION}.zip \
 	&& mv "groovy-${GROOVY_VERSION}" /opt/groovy \
 	\
-	&& sed -i -e "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/grape \
-	&& sed -i -e "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/groovy \
-	&& sed -i -e "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/groovyc \
-	&& sed -i -e "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/groovyConsole \
-	&& sed -i -e "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/groovydoc \
-	&& sed -i -e "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/groovysh \
-	&& sed -i -e "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/java2groovy \
+	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/grape \
+	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/groovy \
+	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/groovyc \
+	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/groovyConsole \
+	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/groovydoc \
+	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/groovysh \
+	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/java2groovy \
 	\
 	&& groovy --version
 
