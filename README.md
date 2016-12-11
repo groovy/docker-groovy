@@ -1,6 +1,15 @@
 # groovy-docker
 This is the Git repo that will eventually (hopefully) become the official images for Groovy.
 
+## Instructions for use
+For now, you'll have to build the images first until they're published on Docker Hub.
+
+### Starting Groovsh
+`docker run -it --rm --name groovy groovy:jre8-latest-alpine`
+
+### Running a Groovy script
+`docker run -it --rm -v "$PWD":/scripts -w /scripts --name groovy groovy:jre8-latest-alpine groovy <script> <script-args>`
+
 ## Instructions for a new Groovy release
 1. Change `ENV GROOVY_VERSION` in all Dockerfiles to new version number.
 1. Change `groovyVersion` variable in _buildImages.sh_ to new version number.
@@ -8,6 +17,6 @@ This is the Git repo that will eventually (hopefully) become the official images
 1. Run `sha256sum` on the above zip and change the `ENV GROOVY_DOWNLOAD_SHA256` in all Dockerfiles to new sha.
 1. Run _buildImages.sh_
 
-## Prerequisites
+### Prerequisites
 * Docker
 * sha256sum
