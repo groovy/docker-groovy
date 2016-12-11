@@ -6,12 +6,12 @@ ENV GROOVY_VERSION 2.4.7
 ENV GROOVY_DOWNLOAD_SHA256 438dd6098252647e88ff12ac5737d0d0f7e16a8e4e42e8be3e05a4c43abefbd5
 
 RUN set -ex \
-	&& apk add --update bash ca-certificates openssl unzip \
+	&& apk add --update bash unzip \
 	&& rm -rf /var/cache/apk/*
 
 WORKDIR /opt
 RUN set -ex \
-	&& wget "https://dl.bintray.com/groovy/maven/apache-groovy-binary-${GROOVY_VERSION}.zip" \
+	&& wget "http://dl.bintray.com/groovy/maven/apache-groovy-binary-${GROOVY_VERSION}.zip" \
 	&& echo "$GROOVY_DOWNLOAD_SHA256 *apache-groovy-binary-${GROOVY_VERSION}.zip" | sha256sum -c - \
 	\
 	&& unzip apache-groovy-binary-${GROOVY_VERSION}.zip \
