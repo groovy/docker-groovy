@@ -5,10 +5,10 @@ This is the Git repo that will eventually (hopefully) become the official images
 For now, you'll have to build the images first until they're published on Docker Hub.
 
 ### Starting Groovsh
-`docker run -it --rm --name groovy groovy:jre8-latest-alpine`
+`docker run -it --rm --name groovy apache/groovy:jre8-latest-alpine`
 
 ### Running a Groovy script
-`docker run -it --rm -v "$PWD":/scripts -w /scripts --name groovy groovy:jre8-latest-alpine groovy <script> <script-args>`
+`docker run -it --rm -v "$PWD":/scripts -w /scripts --name groovy apache/groovy:jre8-latest-alpine groovy <script> <script-args>`
 
 ## Instructions for a new Groovy release
 1. Change `ENV GROOVY_VERSION` in all Dockerfiles to new version number.
