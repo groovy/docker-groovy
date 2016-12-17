@@ -1,5 +1,5 @@
 # groovy-docker
-This is the Git repo that will eventually (hopefully) become the official images for Groovy.
+This is the Git repo that will eventually (hopefully) become the official Docker images for Groovy.
 
 ## Instructions for use
 For now, you'll have to build the images first until they're published on Docker Hub.
@@ -12,7 +12,7 @@ For now, you'll have to build the images first until they're published on Docker
 
 ## Instructions for a new Groovy release
 1. Change `ENV GROOVY_VERSION` in all Dockerfiles to new version number.
-1. Change `groovyVersion` variable in _buildImages.sh_ to new version number.
+1. Change `groovyVersion` (and `groovyMajorVersion` if applicable) variable(s) in _buildImages.sh_ to new version number(s).
 1. Download the binary zip.
 1. Run `sha256sum` on the above zip and change the `ENV GROOVY_DOWNLOAD_SHA256` in all Dockerfiles to new sha.
 1. Run _buildImages.sh_
