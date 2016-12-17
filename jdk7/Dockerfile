@@ -3,7 +3,8 @@ FROM openjdk:7-jdk
 ENV GROOVY_VERSION 2.4.7
 ENV GROOVY_DOWNLOAD_SHA256 438dd6098252647e88ff12ac5737d0d0f7e16a8e4e42e8be3e05a4c43abefbd5
 
-ENV PATH /opt/groovy/bin:$PATH
+ENV GROOVY_HOME /opt/groovy
+ENV PATH ${GROOVY_HOME}/bin:$PATH
 
 RUN set -ex \
 	&& wget -nv "http://dl.bintray.com/groovy/maven/apache-groovy-binary-${GROOVY_VERSION}.zip" \
@@ -15,5 +16,4 @@ RUN set -ex \
 	\
 	&& groovy --version
 
-WORKDIR /opt/groovy
 CMD ["groovysh"]
