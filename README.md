@@ -1,5 +1,5 @@
 # groovy-docker
-This is the Git repo that will eventually (hopefully) become the official Docker images for Groovy.
+This is the Git repo that will eventually become the official Docker images for Groovy.
 
 ## Instructions for use
 For now, you'll have to build the images first until they're published on Docker Hub.
