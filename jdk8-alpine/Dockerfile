@@ -13,14 +13,17 @@ RUN set -ex \
 
 WORKDIR /opt
 RUN set -ex \
+	&& echo "Downloading Groovy" \
 	&& wget "http://dl.bintray.com/groovy/maven/apache-groovy-binary-${GROOVY_VERSION}.zip" \
 	&& echo "$GROOVY_DOWNLOAD_SHA256 *apache-groovy-binary-${GROOVY_VERSION}.zip" | sha256sum -c - \
 	\
+	&& echo "Installing Groovy" \
 	&& unzip apache-groovy-binary-${GROOVY_VERSION}.zip \
 	&& apk del unzip \
 	&& rm apache-groovy-binary-${GROOVY_VERSION}.zip \
 	&& mv "groovy-${GROOVY_VERSION}" /opt/groovy \
 	\
+	&& echo "Applying workaround for GROOVY-7906" \
 	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/grape \
 	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/groovy \
 	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/groovyc \
@@ -29,6 +32,7 @@ RUN set -ex \
 	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/groovysh \
 	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/java2groovy \
 	\
+	&& echo "Testing Groovy installation" \
 	&& groovy --version
 
 CMD ["groovysh"]
