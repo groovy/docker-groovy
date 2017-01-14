@@ -2,7 +2,7 @@
 set -e
 
 groovyMajorVersion=2.4
-groovyVersion=${groovyMajorVersion}.7
+groovyVersion=${groovyMajorVersion}.8
 
 cd jre7
 docker build -t apache/groovy:jre7-${groovyMajorVersion} -t apache/groovy:jre7-${groovyVersion} -t apache/groovy:jre7-latest .
