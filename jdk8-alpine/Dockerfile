@@ -7,8 +7,9 @@ ENV GROOVY_HOME /opt/groovy
 ENV PATH ${GROOVY_HOME}/bin:$PATH
 
 RUN set -ex \
-	&& apk add --update bash unzip \
-	&& rm -rf /var/cache/apk/*
+	&& apk add --no-cache \
+		bash=4.3.42-r4 \
+		unzip
 
 WORKDIR /opt
 RUN set -ex \
