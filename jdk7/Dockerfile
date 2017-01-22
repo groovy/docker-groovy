@@ -15,9 +15,6 @@ RUN set -ex \
 	&& echo "Installing Groovy" \
 	&& unzip apache-groovy-binary-${GROOVY_VERSION}.zip \
 	&& rm apache-groovy-binary-${GROOVY_VERSION}.zip \
-	&& mv "groovy-${GROOVY_VERSION}" /opt/groovy \
-	\
-	&& echo "Testing Groovy installation" \
-	&& groovy --version
+	&& mv "groovy-${GROOVY_VERSION}" /opt/groovy
 
 CMD ["groovysh"]

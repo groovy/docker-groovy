@@ -30,9 +30,6 @@ RUN set -ex \
 	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/groovyConsole \
 	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/groovydoc \
 	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/groovysh \
-	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/java2groovy \
-	\
-	&& echo "Testing Groovy installation" \
-	&& groovy --version
+	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/java2groovy
 
 CMD ["groovysh"]
