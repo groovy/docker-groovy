@@ -1,12 +1,13 @@
 # docker-groovy
 
 ## Supported tags and respective Dockerfile links
+
 * [jdk7](https://github.com/groovy/docker-groovy/blob/master/jdk7/Dockerfile)
 * [jdk7-alpine](https://github.com/groovy/docker-groovy/blob/master/jdk7-alpine/Dockerfile)
 * [jre7](https://github.com/groovy/docker-groovy/blob/master/jre7/Dockerfile)
 * [jre7-alpine](https://github.com/groovy/docker-groovy/blob/master/jre7-alpine/Dockerfile)
 * [jdk8, jdk](https://github.com/groovy/docker-groovy/blob/master/jdk8/Dockerfile)
-* [jdk8-alpine](https://github.com/groovy/docker-groovy/blob/master/jdk8-alpine/Dockerfile)
+* [jdk8-alpine, jdk-alpine](https://github.com/groovy/docker-groovy/blob/master/jdk8-alpine/Dockerfile)
 * [latest, jre8, jre](https://github.com/groovy/docker-groovy/blob/master/jre8/Dockerfile)
 * [alpine, jre8-alpine, jre-alpine](https://github.com/groovy/docker-groovy/blob/master/jre8-alpine/Dockerfile)
 
@@ -17,21 +18,18 @@
 ## How to use this image
 
 ### Starting Groovysh
+
 `docker run -it --rm --name groovy groovy:latest`
 
 ### Running a Groovy script
+
 `docker run --rm -v "$PWD":/scripts -w /scripts --name groovy groovy:latest groovy <script> <script-args>`
 
 ## Instructions for a new Groovy release
+
 1. Change `ENV GROOVY_VERSION` in all Dockerfiles to new version number.
-1. Download the binary zip.
-1. Run `sha256sum` on the above zip and change the `ARG GROOVY_DOWNLOAD_SHA256` in all Dockerfiles to new sha.
 1. Update _.travis.yml_.
 1. Update [official-images](https://github.com/docker-library/official-images) (and [docs](https://github.com/docker-library/docs) if appropriate).
-
-### Prerequisites
-* Docker
-* sha256sum
 
 ---
 ![Travis Build Status](https://travis-ci.org/groovy/docker-groovy.svg?branch=master)
