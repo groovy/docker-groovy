@@ -10,6 +10,8 @@
 * [jdk8-alpine, jdk-alpine](https://github.com/groovy/docker-groovy/blob/master/jdk8-alpine/Dockerfile)
 * [latest, jre8, jre](https://github.com/groovy/docker-groovy/blob/master/jre8/Dockerfile)
 * [alpine, jre8-alpine, jre-alpine](https://github.com/groovy/docker-groovy/blob/master/jre8-alpine/Dockerfile)
+* [jdk9](https://github.com/groovy/docker-groovy/blob/master/jdk9/Dockerfile)
+* [jre9](https://github.com/groovy/docker-groovy/blob/master/jre9/Dockerfile)
 
 ## What is Groovy?
 
