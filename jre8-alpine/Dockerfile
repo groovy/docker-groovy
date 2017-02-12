@@ -1,35 +1,51 @@
-FROM openjdk:8u111-jre-alpine
-
-ENV GROOVY_VERSION 2.4.8
-ARG GROOVY_DOWNLOAD_SHA256=668a65ea17037371a1952cca5f42ebc03329e15d3619aacb4c7dd5f4b39a8dfd
-
-ENV GROOVY_HOME /opt/groovy
-ENV PATH ${GROOVY_HOME}/bin:$PATH
-
-RUN set -ex \
-	&& apk add --no-cache \
-		bash=4.3.42-r4 \
-		unzip
-
-WORKDIR /opt
-RUN set -ex \
-	&& echo "Downloading Groovy" \
-	&& wget "http://dl.bintray.com/groovy/maven/apache-groovy-binary-${GROOVY_VERSION}.zip" \
-	&& echo "$GROOVY_DOWNLOAD_SHA256 *apache-groovy-binary-${GROOVY_VERSION}.zip" | sha256sum -c - \
-	\
-	&& echo "Installing Groovy" \
-	&& unzip apache-groovy-binary-${GROOVY_VERSION}.zip \
-	&& apk del unzip \
-	&& rm apache-groovy-binary-${GROOVY_VERSION}.zip \
-	&& mv "groovy-${GROOVY_VERSION}" /opt/groovy \
-	\
-	&& echo "Applying workaround for GROOVY-7906" \
-	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/grape \
-	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/groovy \
-	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/groovyc \
-	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/groovyConsole \
-	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/groovydoc \
-	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/groovysh \
-	&& sed -i "s|#!/bin/sh|#!/bin/bash|" /opt/groovy/bin/java2groovy
+FROM openjdk:8-jre-alpine
 
 CMD ["groovysh"]
+
+WORKDIR /opt
+ENV GROOVY_HOME /opt/groovy
+ENV PATH "${GROOVY_HOME}/bin:${PATH}"
+
+ENV GROOVY_VERSION 2.4.8
+RUN set -eu \
+	&& echo "Installing dependencies" \
+	&& apk add --no-cache \
+		bash \
+	\
+	&& echo "Installing build dependencies" \
+	&& apk add --no-cache --virtual .build-deps \
+		ca-certificates \
+		gnupg \
+		openssl \
+		unzip \
+	\
+	&& echo "Downloading Groovy" \
+	&& wget -O groovy.zip "https://dist.apache.org/repos/dist/release/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip" \
+	\
+	&& echo "Checking download signature" \
+	&& wget -O groovy.zip.asc "https://dist.apache.org/repos/dist/release/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip.asc" \
+	&& export GNUPGHOME="$(mktemp -d)" \
+	&& wget "http://www.apache.org/dist/groovy/KEYS" \
+	&& gpg --import KEYS \
+	&& gpg --batch --verify groovy.zip.asc groovy.zip \
+	&& rm -r "${GNUPGHOME}" \
+	&& rm groovy.zip.asc KEYS \
+	\
+	&& echo "Installing Groovy" \
+	&& unzip groovy.zip \
+	&& rm groovy.zip \
+	&& mv "groovy-${GROOVY_VERSION}" "${GROOVY_HOME}" \
+	\
+	&& echo "Applying workaround for https://issues.apache.org/jira/browse/GROOVY-7906" \
+	&& sed -i "s|#!/bin/sh|#!/bin/bash|" "${GROOVY_HOME}/bin/grape" \
+	&& sed -i "s|#!/bin/sh|#!/bin/bash|" "${GROOVY_HOME}/bin/groovy" \
+	&& sed -i "s|#!/bin/sh|#!/bin/bash|" "${GROOVY_HOME}/bin/groovyc" \
+	&& sed -i "s|#!/bin/sh|#!/bin/bash|" "${GROOVY_HOME}/bin/groovyConsole" \
+	&& sed -i "s|#!/bin/sh|#!/bin/bash|" "${GROOVY_HOME}/bin/groovydoc" \
+	&& sed -i "s|#!/bin/sh|#!/bin/bash|" "${GROOVY_HOME}/bin/groovysh" \
+	&& sed -i "s|#!/bin/sh|#!/bin/bash|" "${GROOVY_HOME}/bin/java2groovy" \
+	\
+	&& echo "Cleaning up build dependencies" \
+	&& apk del .build-deps \
+	\
+	&& groovy --version
