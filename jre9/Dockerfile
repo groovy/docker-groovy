@@ -14,8 +14,8 @@ RUN set -eu \
 	&& echo "Installing build dependencies" \
 	&& apt-get update \
 	&& apt-get update && apt-get install -y --no-install-recommends \
-		gnupg \
-	&& rm -rf /var/lib/apt/lists/* \
+		gnupg dirmngr \
+	&& rm -r /var/lib/apt/lists/* \
 	\
 	&& echo "Checking download signature" \
 	&& wget -nv -O groovy.zip.asc "https://dist.apache.org/repos/dist/release/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip.asc" \
@@ -34,7 +34,7 @@ RUN set -eu \
 	&& echo "Cleaning up build dependencies" \
 	&& echo $(apt-mark showauto) \
 	&& apt-get remove -y --purge \
-		gnupg \
+		gnupg dirmngr \
 	&& apt-get autoremove -y --purge \
 	\
 	&& groovy --version
