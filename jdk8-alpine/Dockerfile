@@ -6,7 +6,7 @@ WORKDIR /opt
 ENV GROOVY_HOME /opt/groovy
 ENV PATH "${GROOVY_HOME}/bin:${PATH}"
 
-ENV GROOVY_VERSION 2.4.8
+ENV GROOVY_VERSION 2.4.9
 RUN set -eu \
 	&& echo "Installing dependencies" \
 	&& apk add --no-cache \
