@@ -2,13 +2,9 @@ FROM openjdk:9-jre
 
 CMD ["groovysh"]
 
-WORKDIR /opt
 ENV GROOVY_HOME /opt/groovy
-ENV PATH "${GROOVY_HOME}/bin:${PATH}"
-
-VOLUME "/root/.groovy/grapes"
-
 ENV GROOVY_VERSION 2.4.9
+
 RUN set -o errexit -o nounset \
 	&& echo "Downloading Groovy" \
 	&& wget --no-verbose --output-document=groovy.zip "https://dist.apache.org/repos/dist/release/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip" \
@@ -33,15 +29,32 @@ RUN set -o errexit -o nounset \
 	&& unzip groovy.zip \
 	&& rm groovy.zip \
 	&& mv "groovy-${GROOVY_VERSION}" "${GROOVY_HOME}" \
+	&& ln --symbolic "${GROOVY_HOME}/bin/grape" /usr/bin/grape \
+	&& ln --symbolic "${GROOVY_HOME}/bin/groovy" /usr/bin/groovy \
+	&& ln --symbolic "${GROOVY_HOME}/bin/groovyc" /usr/bin/groovyc \
+	&& ln --symbolic "${GROOVY_HOME}/bin/groovyConsole" /usr/bin/groovyConsole \
+	&& ln --symbolic "${GROOVY_HOME}/bin/groovydoc" /usr/bin/groovydoc \
+	&& ln --symbolic "${GROOVY_HOME}/bin/groovysh" /usr/bin/groovysh \
+	&& ln --symbolic "${GROOVY_HOME}/bin/java2groovy" /usr/bin/java2groovy \
 	\
 	&& echo "Cleaning up build dependencies" \
 	&& echo $(apt-mark showauto) \
 	&& apt-get remove --yes --purge \
-		 dirmngr \
-		 gnupg \
+		dirmngr \
+		gnupg \
 	&& apt-get autoremove --yes --purge \
 	\
-	&& echo "Applying workaround for https://github.com/docker-library/openjdk/issues/101" \
-	&& bash -c '([[ ! -d $JAVA_SECURITY_DIR ]] && ln -s $JAVA_HOME/lib $JAVA_HOME/conf) || (echo "Found java conf dir, package has been fixed, remove this hack"; exit -1)' \
+	&& echo "Adding groovy user and group" \
+	&& groupadd --system --gid 1000 groovy \
+	&& useradd --system --gid groovy --uid 1000 --shell /bin/bash --create-home groovy \
+	&& mkdir --parents /home/groovy/.groovy/grapes \
+	&& chown --recursive groovy:groovy /home/groovy \
 	\
-	&& groovy --version
+	&& echo "Applying workaround for https://github.com/docker-library/openjdk/issues/101" \
+	&& bash -c '([[ ! -d $JAVA_SECURITY_DIR ]] && ln -s $JAVA_HOME/lib $JAVA_HOME/conf) || (echo "Found java conf dir, package has been fixed, remove this hack"; exit -1)'
+
+USER groovy
+VOLUME "/home/groovy/.groovy/grapes"
+WORKDIR /home/groovy
+
+RUN groovy --version

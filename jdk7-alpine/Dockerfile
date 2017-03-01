@@ -2,13 +2,9 @@ FROM openjdk:7-jdk-alpine
 
 CMD ["groovysh"]
 
-WORKDIR /opt
 ENV GROOVY_HOME /opt/groovy
-ENV PATH "${GROOVY_HOME}/bin:${PATH}"
-
-VOLUME "/root/.groovy/grapes"
-
 ENV GROOVY_VERSION 2.4.9
+
 RUN set -o errexit -o nounset \
 	&& echo "Installing dependencies" \
 	&& apk add --no-cache \
@@ -36,7 +32,15 @@ RUN set -o errexit -o nounset \
 	&& echo "Installing Groovy" \
 	&& unzip groovy.zip \
 	&& rm groovy.zip \
+	&& mkdir /opt \
 	&& mv "groovy-${GROOVY_VERSION}" "${GROOVY_HOME}" \
+	&& ln -s "${GROOVY_HOME}/bin/grape" /usr/bin/grape \
+	&& ln -s "${GROOVY_HOME}/bin/groovy" /usr/bin/groovy \
+	&& ln -s "${GROOVY_HOME}/bin/groovyc" /usr/bin/groovyc \
+	&& ln -s "${GROOVY_HOME}/bin/groovyConsole" /usr/bin/groovyConsole \
+	&& ln -s "${GROOVY_HOME}/bin/groovydoc" /usr/bin/groovydoc \
+	&& ln -s "${GROOVY_HOME}/bin/groovysh" /usr/bin/groovysh \
+	&& ln -s "${GROOVY_HOME}/bin/java2groovy" /usr/bin/java2groovy \
 	\
 	&& echo "Applying workaround for https://issues.apache.org/jira/browse/GROOVY-7906" \
 	&& sed -i "s|#!/bin/sh|#!/bin/bash|" "${GROOVY_HOME}/bin/grape" \
@@ -50,4 +54,14 @@ RUN set -o errexit -o nounset \
 	&& echo "Cleaning up build dependencies" \
 	&& apk del .build-deps \
 	\
-	&& groovy --version
+	&& echo "Adding groovy user and group" \
+	&& addgroup -S -g 1000 groovy \
+	&& adduser -D -S -G groovy -u 1000 -s /bin/ash groovy \
+	&& mkdir -p /home/groovy/.groovy/grapes \
+	&& chown -R groovy:groovy /home/groovy
+
+USER groovy
+VOLUME "/home/groovy/.groovy/grapes"
+WORKDIR /home/groovy
+
+RUN groovy --version
