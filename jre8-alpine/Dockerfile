@@ -6,6 +6,8 @@ WORKDIR /opt
 ENV GROOVY_HOME /opt/groovy
 ENV PATH "${GROOVY_HOME}/bin:${PATH}"
 
+VOLUME "/root/.groovy/grapes"
+
 ENV GROOVY_VERSION 2.4.9
 RUN set -o errexit -o nounset \
 	&& echo "Installing dependencies" \
