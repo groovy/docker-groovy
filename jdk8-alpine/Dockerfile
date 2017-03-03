@@ -7,7 +7,7 @@ ENV GROOVY_HOME /opt/groovy
 ENV PATH "${GROOVY_HOME}/bin:${PATH}"
 
 ENV GROOVY_VERSION 2.4.9
-RUN set -eu \
+RUN set -o errexit -o nounset \
 	&& echo "Installing dependencies" \
 	&& apk add --no-cache \
 		bash \
