@@ -41,4 +41,7 @@ RUN set -o errexit -o nounset \
 		gnupg \
 	&& apt-get autoremove --yes --purge \
 	\
+	&& echo "Applying workaround for https://github.com/docker-library/openjdk/issues/101" \
+	&& bash -c '([[ ! -d $JAVA_SECURITY_DIR ]] && ln -s $JAVA_HOME/lib $JAVA_HOME/conf) || (echo "Found java conf dir, package has been fixed, remove this hack"; exit -1)' \
+	\
 	&& groovy --version
