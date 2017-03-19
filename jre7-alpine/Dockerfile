@@ -4,7 +4,7 @@ CMD ["groovysh"]
 
 ENV GROOVY_HOME /opt/groovy
 
-ENV GROOVY_VERSION 2.4.9
+ENV GROOVY_VERSION 2.4.10
 RUN set -o errexit -o nounset \
 	&& echo "Installing dependencies" \
 	&& apk add --no-cache \
@@ -20,11 +20,31 @@ RUN set -o errexit -o nounset \
 	&& echo "Downloading Groovy" \
 	&& wget -O groovy.zip "https://dist.apache.org/repos/dist/release/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip" \
 	\
+	&& echo "Importing keys listed in http://www.apache.org/dist/groovy/KEYS from key server" \
+	&& export GNUPGHOME="$(mktemp -d)" \
+	&& for key in \
+		"0x41321490758AAD6F" \
+		"0x825C06C827AF6B66" \
+		"0x6A65176A0FB1CD0B" \
+	; do \
+		for server in \
+			ha.pool.sks-keyservers.net \
+			hkp://p80.pool.sks-keyservers.net:80 \
+			pgp.mit.edu \
+		; do \
+			echo "  Trying ${server}"; \
+			if gpg --keyserver "${server}" --recv-keys "${key}"; then \
+				break; \
+			fi; \
+		done; \
+	done; \
+	if [ $(gpg --list-keys | grep -c "pub ") -ne 3 ]; then \
+		echo "ERROR: Failed to fetch GPG keys" >&2; \
+		exit 1; \
+	fi \
+	\
 	&& echo "Checking download signature" \
 	&& wget -O groovy.zip.asc "https://dist.apache.org/repos/dist/release/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip.asc" \
-	&& export GNUPGHOME="$(mktemp -d)" \
-	&& echo "Importing keys listed in http://www.apache.org/dist/groovy/KEYS from key server" \
-	&& gpg --keyserver pgp.mit.edu --recv-keys "0x41321490758AAD6F" "0x825C06C827AF6B66" "0x6A65176A0FB1CD0B" \
 	&& gpg --batch --verify groovy.zip.asc groovy.zip \
 	&& rm -r "${GNUPGHOME}" \
 	&& rm groovy.zip.asc \
@@ -33,7 +53,7 @@ RUN set -o errexit -o nounset \
 	&& unzip groovy.zip \
 	&& rm groovy.zip \
 	&& mkdir /opt \
-	&& mv "groovy-${GROOVY_VERSION}" "${GROOVY_HOME}" \
+	&& mv "groovy-${GROOVY_VERSION}" "${GROOVY_HOME}/" \
 	&& ln -s "${GROOVY_HOME}/bin/grape" /usr/bin/grape \
 	&& ln -s "${GROOVY_HOME}/bin/groovy" /usr/bin/groovy \
 	&& ln -s "${GROOVY_HOME}/bin/groovyc" /usr/bin/groovyc \
@@ -60,8 +80,11 @@ RUN set -o errexit -o nounset \
 	&& mkdir -p /home/groovy/.groovy/grapes \
 	&& chown -R groovy:groovy /home/groovy
 
+# Create Grapes volume
 USER groovy
 VOLUME "/home/groovy/.groovy/grapes"
 WORKDIR /home/groovy
 
-RUN groovy --version
+RUN set -o errexit -o nounset \
+	&& echo "Testing Groovy installation" \
+	&& groovy --version

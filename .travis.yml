@@ -17,10 +17,12 @@ before_install:
   - env | sort
   - cd "${VERSION}${VARIANT:+-$VARIANT}"
   - image="groovy:${VERSION}${VARIANT:+-$VARIANT}"
+  - docker rmi "${image}" || true
+  - docker images --quiet --filter=dangling=true | xargs --no-run-if-empty docker rmi -f
 
 install:
   - docker build --tag "${image}" .
 
 script:
   - cd ../test
-  - ./run.sh "${image}" "2.4.9"
+  - ./run.sh "${image}" "2.4.10"
