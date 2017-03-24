@@ -27,6 +27,15 @@
 
 `docker run --rm -v "$PWD":/scripts -w /scripts --name groovy groovy:latest groovy <script> <script-args>`
 
+### Reusing the Grapes cache
+
+The local Grapes cache can be reused across containers by creating a volume and mounting it in */home/groovy/.groovy/grapes*.
+
+```
+docker volume create --name grapes-cache
+docker run -it -v grapes-cache:/home/groovy/.groovy/grapes groovy:alpine
+```
+
 ## Instructions for a new Groovy release
 
 1. Change `ENV GROOVY_VERSION` in all Dockerfiles to new version number.
