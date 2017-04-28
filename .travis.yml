@@ -24,4 +24,4 @@ install:
 
 script:
   - cd ../test
-  - ./run.sh "${image}" "2.4.11"
+  - ./run.sh "${image}" "2.5.0-alpha-1"
