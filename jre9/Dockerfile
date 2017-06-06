@@ -58,6 +58,9 @@ RUN set -o errexit -o nounset \
 	&& ln --symbolic "${GROOVY_HOME}/bin/groovysh" /usr/bin/groovysh \
 	&& ln --symbolic "${GROOVY_HOME}/bin/java2groovy" /usr/bin/java2groovy \
 	\
+	&& echo "Editing startGroovy to include java.xml.bind module" \
+	&& sed -i 's|startGroovy ( ) {|startGroovy ( ) {\n    JAVA_OPTS="$JAVA_OPTS --add-modules=java.xml.bind"|' "${GROOVY_HOME}/bin/startGroovy" \
+	\
 	&& echo "Cleaning up build dependencies" \
 	&& echo $(apt-mark showauto) \
 	&& apt-get remove --yes --purge \
