@@ -26,6 +26,7 @@ RUN set -o errexit -o nounset \
 		"7FAA0F2206DE228F0DB01AD741321490758AAD6F" \
 		"331224E1D7BE883D16E8A685825C06C827AF6B66" \
 		"34441E504A937F43EB0DAEF96A65176A0FB1CD0B" \
+		"9A810E3B766E089FFB27C70F11B595CEDC4AEBB5" \
 	; do \
 		for server in \
 			ha.pool.sks-keyservers.net \
@@ -38,7 +39,7 @@ RUN set -o errexit -o nounset \
 			fi; \
 		done; \
 	done; \
-	if [ $(gpg --list-keys | grep -c "pub ") -ne 3 ]; then \
+	if [ $(gpg --list-keys | grep -c "pub ") -ne 4 ]; then \
 		echo "ERROR: Failed to fetch GPG keys" >&2; \
 		exit 1; \
 	fi \
