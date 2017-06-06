@@ -42,7 +42,7 @@ docker run -it -v grapes-cache:/home/groovy/.groovy/grapes groovy:alpine
 1. Update _.travis.yml_.
 1. Update [official-images](https://github.com/docker-library/official-images) (and [docs](https://github.com/docker-library/docs) if appropriate).
 
-**Note: Java 9 images are experimental**
+**Note: Java 9 support is experimental**
 
 ---
 ![Travis Build Status](https://travis-ci.org/groovy/docker-groovy.svg?branch=master)
