@@ -21,11 +21,11 @@
 
 ### Starting Groovysh
 
-`docker run -it --rm --name groovy groovy:latest`
+`docker run -it --rm groovy:latest`
 
 ### Running a Groovy script
 
-`docker run --rm -v "$PWD":/scripts -w /scripts --name groovy groovy:latest groovy <script> <script-args>`
+`docker run --rm -v "$PWD":/scripts -w /scripts groovy:latest groovy <script> <script-args>`
 
 ### Reusing the Grapes cache
 
