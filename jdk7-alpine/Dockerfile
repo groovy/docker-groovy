@@ -79,7 +79,11 @@ RUN set -o errexit -o nounset \
 	&& addgroup -S -g 1000 groovy \
 	&& adduser -D -S -G groovy -u 1000 -s /bin/ash groovy \
 	&& mkdir -p /home/groovy/.groovy/grapes \
-	&& chown -R groovy:groovy /home/groovy
+	&& chown -R groovy:groovy /home/groovy \
+	\
+	&& echo "Symlinking root Grapes cache to groovy Grapes cache" \
+	&& mkdir /root/.groovy \
+	&& ln -s /home/groovy/.groovy/grapes /root/.groovy/grapes
 
 # Create Grapes volume
 USER groovy
