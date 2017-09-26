@@ -37,7 +37,7 @@ RUN set -o errexit -o nounset \
 	&& echo "Checking download signature" \
 	&& wget --no-verbose --output-document=groovy.zip.asc "https://dist.apache.org/repos/dist/release/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip.asc" \
 	&& gpg --batch --verify groovy.zip.asc groovy.zip \
-	&& rm --recursive "${GNUPGHOME}" \
+	&& rm --recursive --force "${GNUPGHOME}" \
 	&& rm groovy.zip.asc \
 	\
 	&& echo "Installing Groovy" \

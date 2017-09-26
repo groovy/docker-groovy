@@ -14,7 +14,7 @@ RUN set -o errexit -o nounset \
 	&& apt-get update && apt-get install --yes --no-install-recommends \
 		dirmngr \
 		gnupg \
-	&& rm --recursive /var/lib/apt/lists/* \
+	&& rm --recursive --force /var/lib/apt/lists/* \
 	\
 	&& echo "Importing keys listed in http://www.apache.org/dist/groovy/KEYS from key server" \
 	&& export GNUPGHOME="$(mktemp -d)" \
