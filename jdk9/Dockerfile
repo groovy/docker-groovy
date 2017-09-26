@@ -23,11 +23,12 @@ RUN set -o errexit -o nounset \
 		"331224E1D7BE883D16E8A685825C06C827AF6B66" \
 		"34441E504A937F43EB0DAEF96A65176A0FB1CD0B" \
 		"9A810E3B766E089FFB27C70F11B595CEDC4AEBB5" \
+		"81CABC23EECA0790E8989B361FF96E10F0E13706" \
 	; do \
 		for server in \
-			ha.pool.sks-keyservers.net \
-			hkp://p80.pool.sks-keyservers.net:80 \
-			pgp.mit.edu \
+			"ha.pool.sks-keyservers.net" \
+			"hkp://p80.pool.sks-keyservers.net:80" \
+			"pgp.mit.edu" \
 		; do \
 			echo "  Trying ${server}"; \
 			if gpg --keyserver "${server}" --recv-keys "${key}"; then \
@@ -35,7 +36,7 @@ RUN set -o errexit -o nounset \
 			fi; \
 		done; \
 	done; \
-	if [ $(gpg --list-keys | grep -c "pub ") -ne 4 ]; then \
+	if [ $(gpg --list-keys | grep -c "pub ") -ne 5 ]; then \
 		echo "ERROR: Failed to fetch GPG keys" >&2; \
 		exit 1; \
 	fi \
