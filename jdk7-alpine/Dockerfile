@@ -80,7 +80,10 @@ RUN set -o errexit -o nounset \
 	&& addgroup -S -g 1000 groovy \
 	&& adduser -D -S -G groovy -u 1000 -s /bin/ash groovy \
 	&& mkdir -p /home/groovy/.groovy/grapes \
-	&& chown -R groovy:groovy /home/groovy
+	&& chown -R groovy:groovy /home/groovy \
+	\
+	&& echo "Symlinking root .groovy to groovy .groovy" \
+	&& ln -s /home/groovy/.groovy /root/.groovy
 
 # Create Grapes volume
 USER groovy
