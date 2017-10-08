@@ -60,7 +60,7 @@ RUN set -o errexit -o nounset \
 	&& ln --symbolic "${GROOVY_HOME}/bin/java2groovy" /usr/bin/java2groovy \
 	\
 	&& echo "Editing startGroovy to include java.xml.bind module" \
-	&& sed -i 's|startGroovy ( ) {|startGroovy ( ) {\n    JAVA_OPTS="$JAVA_OPTS --add-modules=java.xml.bind"|' "${GROOVY_HOME}/bin/startGroovy" \
+	&& sed -i 's|startGroovy ( ) {|startGroovy ( ) {\n    JAVA_OPTS="$JAVA_OPTS --add-modules=ALL-SYSTEM"|' "${GROOVY_HOME}/bin/startGroovy" \
 	\
 	&& echo "Cleaning up build dependencies" \
 	&& echo $(apt-mark showauto) \
@@ -75,8 +75,8 @@ RUN set -o errexit -o nounset \
 	&& mkdir --parents /home/groovy/.groovy/grapes \
 	&& chown --recursive groovy:groovy /home/groovy \
 	\
-	&& echo "Applying workaround for https://github.com/docker-library/openjdk/issues/101" \
-	&& bash -c '([[ ! -d $JAVA_SECURITY_DIR ]] && ln -s $JAVA_HOME/lib $JAVA_HOME/conf) || (echo "Found java conf dir, package has been fixed, remove this hack"; exit -1)'
+	&& echo "Symlinking root .groovy to groovy .groovy" \
+	&& ln -s /home/groovy/.groovy /root/.groovy
 
 # Create Grapes volume
 USER groovy

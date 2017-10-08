@@ -56,7 +56,10 @@ RUN set -o errexit -o nounset \
 	&& groupadd --system --gid 1000 groovy \
 	&& useradd --system --gid groovy --uid 1000 --shell /bin/bash --create-home groovy \
 	&& mkdir --parents /home/groovy/.groovy/grapes \
-	&& chown --recursive groovy:groovy /home/groovy
+	&& chown --recursive groovy:groovy /home/groovy \
+	\
+	&& echo "Symlinking root .groovy to groovy .groovy" \
+	&& ln -s /home/groovy/.groovy /root/.groovy
 
 # Create Grapes volume
 USER groovy
