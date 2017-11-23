@@ -3,7 +3,7 @@ FROM openjdk:9-jre
 CMD ["groovysh"]
 
 ENV GROOVY_HOME /opt/groovy
-ENV GROOVY_VERSION 2.4.12
+ENV GROOVY_VERSION 2.4.13
 
 # cacerts from JDK 8u152 to workaround http://bugs.java.com/view_bug.do?bug_id=8189357
 COPY cacerts /etc/ssl/certs/java/cacerts
