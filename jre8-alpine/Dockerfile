@@ -3,7 +3,7 @@ FROM openjdk:8-jre-alpine
 CMD ["groovysh"]
 
 ENV GROOVY_HOME /opt/groovy
-ENV GROOVY_VERSION 2.4.13
+ENV GROOVY_VERSION 2.4.14
 
 RUN set -o errexit -o nounset \
 	&& echo "Installing build dependencies" \
