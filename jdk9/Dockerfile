@@ -5,9 +5,6 @@ CMD ["groovysh"]
 ENV GROOVY_HOME /opt/groovy
 ENV GROOVY_VERSION 2.4.15
 
-# cacerts from JDK 8u152 to workaround http://bugs.java.com/view_bug.do?bug_id=8189357
-COPY cacerts /etc/ssl/certs/java/cacerts
-
 RUN set -o errexit -o nounset \
 	&& echo "Downloading Groovy" \
 	&& wget --no-verbose --output-document=groovy.zip "https://dist.apache.org/repos/dist/release/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip" \
