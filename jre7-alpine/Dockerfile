@@ -4,7 +4,7 @@ CMD ["groovysh"]
 
 ENV GROOVY_HOME /opt/groovy
 
-ENV GROOVY_VERSION 2.5.0-rc-2
+ENV GROOVY_VERSION 2.5.0-rc-3
 RUN set -o errexit -o nounset \
 	&& echo "Installing build dependencies" \
 	&& apk add --no-cache --virtual .build-deps \
