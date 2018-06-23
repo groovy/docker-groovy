@@ -3,7 +3,7 @@ FROM openjdk:8-jdk
 CMD ["groovysh"]
 
 ENV GROOVY_HOME /opt/groovy
-ENV GROOVY_VERSION 2.4.15
+ENV GROOVY_VERSION 2.5.0
 
 RUN set -o errexit -o nounset \
 	&& echo "Downloading Groovy" \
