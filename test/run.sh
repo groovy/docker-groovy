@@ -12,7 +12,7 @@ else
     home="/root"
 fi
 
-version=$(docker run --user "${user}" --rm --volume "${PWD}:${home}/scripts" --workdir "${home}/scripts" "${image}" groovy printVersion.groovy)
+version=$(docker run --user "${user}" --rm "${image}" groovy -e "println GroovySystem.version")
 if [[ "${version}" != "${expectedGroovyVersion}" ]]; then
     echo "version '${version}' does not match expected version '${expectedGroovyVersion}'"
     exit 1

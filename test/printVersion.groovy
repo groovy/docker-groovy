@@ -1,1 +1,0 @@
-println GroovySystem.version
