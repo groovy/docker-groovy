@@ -8,10 +8,7 @@ ENV GROOVY_VERSION 2.5.2
 RUN set -o errexit -o nounset \
 	&& echo "Installing build dependencies" \
 	&& apk add --no-cache --virtual .build-deps \
-		ca-certificates \
 		gnupg \
-		openssl \
-		unzip \
 	\
 	&& echo "Downloading Groovy" \
 	&& wget -O groovy.zip "https://dist.apache.org/repos/dist/release/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip" \
