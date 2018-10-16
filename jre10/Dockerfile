@@ -17,8 +17,8 @@ RUN set -o errexit -o nounset \
     && rm --recursive --force /var/lib/apt/lists/* \
     \
     && echo "Importing keys listed in http://www.apache.org/dist/groovy/KEYS from key server" \
-    && export GNUPGHOME="$(mktemp -d)" \
-    && for key in \
+    && export GNUPGHOME="$(mktemp -d)"; \
+    for key in \
         "7FAA0F2206DE228F0DB01AD741321490758AAD6F" \
         "331224E1D7BE883D16E8A685825C06C827AF6B66" \
         "34441E504A937F43EB0DAEF96A65176A0FB1CD0B" \
@@ -35,8 +35,8 @@ RUN set -o errexit -o nounset \
                 break; \
             fi; \
         done; \
-    done \
-    && if [ $(gpg --list-keys | grep -c "pub ") -ne 5 ]; then \
+    done; \
+    if [ $(gpg --list-keys | grep -c "pub ") -ne 5 ]; then \
         echo "ERROR: Failed to fetch GPG keys" >&2; \
         exit 1; \
     fi \
@@ -45,8 +45,8 @@ RUN set -o errexit -o nounset \
     && wget --no-verbose --output-document=groovy.zip.asc "https://dist.apache.org/repos/dist/release/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip.asc" \
     && gpg --batch --verify groovy.zip.asc groovy.zip \
     && rm --recursive --force "${GNUPGHOME}" \
-    && rm groovy.zip.asc
-RUN set -o errexit -o nounset \
+    && rm groovy.zip.asc \
+    \
     && echo "Installing Groovy" \
     && unzip groovy.zip \
     && rm groovy.zip \
