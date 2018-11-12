@@ -59,8 +59,8 @@ RUN set -o errexit -o nounset \
     && ln --symbolic "${GROOVY_HOME}/bin/groovysh" /usr/bin/groovysh \
     && ln --symbolic "${GROOVY_HOME}/bin/java2groovy" /usr/bin/java2groovy \
     \
-    && echo "Editing startGroovy to include java.xml.bind module" \
-    && sed -i 's|startGroovy ( ) {|startGroovy ( ) {\n    JAVA_OPTS="$JAVA_OPTS --add-modules=ALL-SYSTEM"|' "${GROOVY_HOME}/bin/startGroovy" \
+    && echo "Downloading JAXB runtime" \
+    && wget --directory-prefix="${GROOVY_HOME}/lib" --no-verbose "https://repo1.maven.org/maven2/org/glassfish/jaxb/jaxb-runtime/2.3.1/jaxb-runtime-2.3.1.jar" \
     \
     && echo "Cleaning up build dependencies" \
     && echo $(apt-mark showauto) \
