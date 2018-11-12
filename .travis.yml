@@ -28,4 +28,4 @@ install:
 
 script:
   - cd ../test
-  - ./run.sh "${image}" "2.5.3"
+  - ./run.sh "${image}" "2.5.4"
