@@ -14,13 +14,13 @@ fi
 
 version=$(docker run --user "${user}" --rm "${image}" groovy -e "println GroovySystem.version")
 if [[ "${version}" != "${expectedGroovyVersion}" ]]; then
-    echo "version '${version}' does not match expected version '${expectedGroovyVersion}'"
+    echo "version '${version}' does not match expected version '${expectedGroovyVersion}'" >&2
     exit 1
 fi
 
 docker run --user "${user}" --rm --volume "${PWD}:${home}/scripts" --workdir "${home}/scripts" "${image}" groovy grape.groovy
 if [[ $? -ne 0 ]]; then
-    echo "No Grape cached files found"
+    echo "No Grape cached files found" >&2
     exit 1
 fi
 
