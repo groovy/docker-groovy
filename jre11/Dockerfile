@@ -31,7 +31,7 @@ RUN set -o errexit -o nounset \
             "pgp.mit.edu" \
         ; do \
             echo "  Trying ${server}"; \
-            if gpg --keyserver "${server}" --recv-keys "${key}"; then \
+            if gpg --batch --no-tty --keyserver "${server}" --recv-keys "${key}"; then \
                 break; \
             fi; \
         done; \
