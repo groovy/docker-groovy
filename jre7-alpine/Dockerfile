@@ -28,12 +28,12 @@ RUN set -o errexit -o nounset \
             "pgp.mit.edu" \
         ; do \
             echo "  Trying ${server}"; \
-            if gpg --batch --no-tty --keyserver "${server}" --recv-keys "${key}"; then \
+            if gpg --batch --keyserver "${server}" --recv-keys "${key}"; then \
                 break; \
             fi; \
         done; \
     done; \
-    if [ $(gpg --list-keys | grep -c "pub ") -ne 5 ]; then \
+    if [ $(gpg --batch --list-keys | grep -c "pub ") -ne 5 ]; then \
         echo "ERROR: Failed to fetch GPG keys" >&2; \
         exit 1; \
     fi \
