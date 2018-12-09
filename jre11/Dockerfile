@@ -31,19 +31,19 @@ RUN set -o errexit -o nounset \
             "pgp.mit.edu" \
         ; do \
             echo "  Trying ${server}"; \
-            if gpg --batch --keyserver "${server}" --recv-keys "${key}"; then \
+            if gpg --batch --no-tty --keyserver "${server}" --recv-keys "${key}"; then \
                 break; \
             fi; \
         done; \
     done; \
-    if [ $(gpg --batch --list-keys | grep -c "pub ") -ne 5 ]; then \
+    if [ $(gpg --batch --no-tty --list-keys | grep -c "pub ") -ne 5 ]; then \
         echo "ERROR: Failed to fetch GPG keys" >&2; \
         exit 1; \
     fi \
     \
     && echo "Checking download signature" \
     && wget --no-verbose --output-document=groovy.zip.asc "https://dist.apache.org/repos/dist/release/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip.asc" \
-    && gpg --batch --verify groovy.zip.asc groovy.zip \
+    && gpg --batch --no-tty --verify groovy.zip.asc groovy.zip \
     && rm --recursive --force "${GNUPGHOME}" \
     && rm groovy.zip.asc \
     \
