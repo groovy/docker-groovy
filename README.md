@@ -2,10 +2,6 @@
 
 ## Supported tags and respective Dockerfile links
 
-* [jdk7](https://github.com/groovy/docker-groovy/blob/master/jdk7/Dockerfile)
-* [jdk7-alpine](https://github.com/groovy/docker-groovy/blob/master/jdk7-alpine/Dockerfile)
-* [jre7](https://github.com/groovy/docker-groovy/blob/master/jre7/Dockerfile)
-* [jre7-alpine](https://github.com/groovy/docker-groovy/blob/master/jre7-alpine/Dockerfile)
 * [jdk8, jdk](https://github.com/groovy/docker-groovy/blob/master/jdk8/Dockerfile)
 * [jdk8-alpine, jdk-alpine](https://github.com/groovy/docker-groovy/blob/master/jdk8-alpine/Dockerfile)
 * [latest, jre8, jre](https://github.com/groovy/docker-groovy/blob/master/jre8/Dockerfile)

@@ -2,10 +2,6 @@ language: bash
 services: docker
 
 env:
-  - VERSION=jdk7
-  - VERSION=jdk7 VARIANT=alpine
-  - VERSION=jre7
-  - VERSION=jre7 VARIANT=alpine
   - VERSION=jdk8
   - VERSION=jdk8 VARIANT=alpine
   - VERSION=jre8
