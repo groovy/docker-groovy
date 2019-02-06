@@ -47,7 +47,7 @@ RUN set -o errexit -o nounset \
     && echo "Installing Groovy" \
     && unzip groovy.zip \
     && rm groovy.zip \
-    && mkdir /opt \
+    && mkdir -p /opt \
     && mv "groovy-${GROOVY_VERSION}" "${GROOVY_HOME}/" \
     && ln -s "${GROOVY_HOME}/bin/grape" /usr/bin/grape \
     && ln -s "${GROOVY_HOME}/bin/groovy" /usr/bin/groovy \
