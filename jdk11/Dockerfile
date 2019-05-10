@@ -3,7 +3,7 @@ FROM openjdk:11-jdk
 CMD ["groovysh"]
 
 ENV GROOVY_HOME /opt/groovy
-ENV GROOVY_VERSION 2.5.6
+ENV GROOVY_VERSION 2.5.7
 
 RUN set -o errexit -o nounset \
     && echo "Downloading Groovy" \
@@ -80,7 +80,7 @@ RUN set -o errexit -o nounset \
 
 # Create Grapes volume
 USER groovy
-VOLUME "/home/groovy/.groovy/grapes"
+VOLUME /home/groovy/.groovy/grapes
 WORKDIR /home/groovy
 
 RUN set -o errexit -o nounset \
