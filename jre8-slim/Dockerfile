@@ -1,17 +1,21 @@
-FROM openjdk:8-jdk-alpine
+FROM openjdk:8-jre-slim
 
 CMD ["groovysh"]
+
+RUN apt-get update \
+    && apt-get install --yes --no-install-recommends \
+       gnupg \
+       dirmngr \
+       unzip \
+       wget \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV GROOVY_HOME /opt/groovy
 ENV GROOVY_VERSION 2.5.7
 
 RUN set -o errexit -o nounset \
-    && echo "Installing build dependencies" \
-    && apk add --no-cache --virtual .build-deps \
-        gnupg \
-    \
     && echo "Downloading Groovy" \
-    && wget -qO groovy.zip "https://dist.apache.org/repos/dist/release/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip" \
+    && wget --no-verbose --output-document=groovy.zip "https://dist.apache.org/repos/dist/release/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip" \
     \
     && echo "Importing keys listed in http://www.apache.org/dist/groovy/KEYS from key server" \
     && export GNUPGHOME="$(mktemp -d)"; \
@@ -39,32 +43,28 @@ RUN set -o errexit -o nounset \
     fi \
     \
     && echo "Checking download signature" \
-    && wget -qO groovy.zip.asc "https://dist.apache.org/repos/dist/release/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip.asc" \
+    && wget --no-verbose --output-document=groovy.zip.asc "https://dist.apache.org/repos/dist/release/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip.asc" \
     && gpg --batch --no-tty --verify groovy.zip.asc groovy.zip \
-    && rm -rf "${GNUPGHOME}" \
+    && rm --recursive --force "${GNUPGHOME}" \
     && rm groovy.zip.asc \
     \
     && echo "Installing Groovy" \
     && unzip groovy.zip \
     && rm groovy.zip \
-    && mkdir -p /opt \
     && mv "groovy-${GROOVY_VERSION}" "${GROOVY_HOME}/" \
-    && ln -s "${GROOVY_HOME}/bin/grape" /usr/bin/grape \
-    && ln -s "${GROOVY_HOME}/bin/groovy" /usr/bin/groovy \
-    && ln -s "${GROOVY_HOME}/bin/groovyc" /usr/bin/groovyc \
-    && ln -s "${GROOVY_HOME}/bin/groovyConsole" /usr/bin/groovyConsole \
-    && ln -s "${GROOVY_HOME}/bin/groovydoc" /usr/bin/groovydoc \
-    && ln -s "${GROOVY_HOME}/bin/groovysh" /usr/bin/groovysh \
-    && ln -s "${GROOVY_HOME}/bin/java2groovy" /usr/bin/java2groovy \
-    \
-    && echo "Cleaning up build dependencies" \
-    && apk del .build-deps \
+    && ln --symbolic "${GROOVY_HOME}/bin/grape" /usr/bin/grape \
+    && ln --symbolic "${GROOVY_HOME}/bin/groovy" /usr/bin/groovy \
+    && ln --symbolic "${GROOVY_HOME}/bin/groovyc" /usr/bin/groovyc \
+    && ln --symbolic "${GROOVY_HOME}/bin/groovyConsole" /usr/bin/groovyConsole \
+    && ln --symbolic "${GROOVY_HOME}/bin/groovydoc" /usr/bin/groovydoc \
+    && ln --symbolic "${GROOVY_HOME}/bin/groovysh" /usr/bin/groovysh \
+    && ln --symbolic "${GROOVY_HOME}/bin/java2groovy" /usr/bin/java2groovy \
     \
     && echo "Adding groovy user and group" \
-    && addgroup -S -g 1000 groovy \
-    && adduser -D -S -G groovy -u 1000 -s /bin/ash groovy \
-    && mkdir -p /home/groovy/.groovy/grapes \
-    && chown -R groovy:groovy /home/groovy \
+    && groupadd --system --gid 1000 groovy \
+    && useradd --system --gid groovy --uid 1000 --shell /bin/bash --create-home groovy \
+    && mkdir --parents /home/groovy/.groovy/grapes \
+    && chown --recursive groovy:groovy /home/groovy \
     \
     && echo "Symlinking root .groovy to groovy .groovy" \
     && ln -s /home/groovy/.groovy /root/.groovy
