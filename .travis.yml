@@ -8,6 +8,9 @@ env:
   - VERSION=jre8 VARIANT=slim
   - VERSION=jdk11
   - VERSION=jre11
+  - VERSION=jdk12
+  - VERSION=jdk12 VARIANT=slim
+  - VERSION=jre12
 
 before_install:
   - env | sort
