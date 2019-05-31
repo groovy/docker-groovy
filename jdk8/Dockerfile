@@ -1,6 +1,15 @@
-FROM openjdk:8-jdk
+FROM adoptopenjdk:8-jdk-hotspot
 
 CMD ["groovysh"]
+
+RUN apt-get update \
+    && echo "Installing build dependencies" \
+    && apt-get install --yes --no-install-recommends \
+        dirmngr \
+        gnupg \
+        unzip \
+        wget \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV GROOVY_HOME /opt/groovy
 ENV GROOVY_VERSION 2.5.7

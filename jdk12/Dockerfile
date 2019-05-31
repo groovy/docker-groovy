@@ -3,10 +3,12 @@ FROM adoptopenjdk:12-jdk-hotspot
 CMD ["groovysh"]
 
 RUN apt-get update \
+    && echo "Installing build dependencies" \
     && apt-get install --yes --no-install-recommends \
-       gnupg \
-       unzip \
-       wget \
+        dirmngr \
+        gnupg \
+        unzip \
+        wget \
     && rm -rf /var/lib/apt/lists/*
 
 ENV GROOVY_HOME /opt/groovy
@@ -15,13 +17,6 @@ ENV GROOVY_VERSION 2.5.7
 RUN set -o errexit -o nounset \
     && echo "Downloading Groovy" \
     && wget --no-verbose --output-document=groovy.zip "https://dist.apache.org/repos/dist/release/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip" \
-    \
-    && echo "Installing build dependencies" \
-    && apt-get update \
-    && apt-get update && apt-get install --yes --no-install-recommends \
-        dirmngr \
-        gnupg \
-    && rm --recursive --force /var/lib/apt/lists/* \
     \
     && echo "Importing keys listed in http://www.apache.org/dist/groovy/KEYS from key server" \
     && export GNUPGHOME="$(mktemp -d)"; \
