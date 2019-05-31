@@ -1,10 +1,33 @@
-FROM openjdk:8-jdk
+FROM adoptopenjdk:8-jdk-hotspot
 
 CMD ["groovysh"]
 
 ENV GROOVY_HOME /opt/groovy
-ENV GROOVY_VERSION 2.5.7
 
+RUN set -o errexit -o nounset \
+    && echo "Adding groovy user and group" \
+    && groupadd --system --gid 1000 groovy \
+    && useradd --system --gid groovy --uid 1000 --shell /bin/bash --create-home groovy \
+    && mkdir --parents /home/groovy/.groovy/grapes \
+    && chown --recursive groovy:groovy /home/groovy \
+    \
+    && echo "Symlinking root .groovy to groovy .groovy" \
+    && ln -s /home/groovy/.groovy /root/.groovy
+
+VOLUME /home/groovy/.groovy/grapes
+
+WORKDIR /home/groovy
+
+RUN apt-get update \
+    && echo "Installing build dependencies" \
+    && apt-get install --yes --no-install-recommends \
+        dirmngr \
+        gnupg \
+        unzip \
+        wget \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV GROOVY_VERSION 2.5.7
 RUN set -o errexit -o nounset \
     && echo "Downloading Groovy" \
     && wget --no-verbose --output-document=groovy.zip "https://dist.apache.org/repos/dist/release/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip" \
@@ -50,21 +73,9 @@ RUN set -o errexit -o nounset \
     && ln --symbolic "${GROOVY_HOME}/bin/groovyConsole" /usr/bin/groovyConsole \
     && ln --symbolic "${GROOVY_HOME}/bin/groovydoc" /usr/bin/groovydoc \
     && ln --symbolic "${GROOVY_HOME}/bin/groovysh" /usr/bin/groovysh \
-    && ln --symbolic "${GROOVY_HOME}/bin/java2groovy" /usr/bin/java2groovy \
-    \
-    && echo "Adding groovy user and group" \
-    && groupadd --system --gid 1000 groovy \
-    && useradd --system --gid groovy --uid 1000 --shell /bin/bash --create-home groovy \
-    && mkdir --parents /home/groovy/.groovy/grapes \
-    && chown --recursive groovy:groovy /home/groovy \
-    \
-    && echo "Symlinking root .groovy to groovy .groovy" \
-    && ln -s /home/groovy/.groovy /root/.groovy
+    && ln --symbolic "${GROOVY_HOME}/bin/java2groovy" /usr/bin/java2groovy
 
-# Create Grapes volume
 USER groovy
-VOLUME /home/groovy/.groovy/grapes
-WORKDIR /home/groovy
 
 RUN set -o errexit -o nounset \
     && echo "Testing Groovy installation" \

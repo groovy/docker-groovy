@@ -2,26 +2,35 @@ FROM adoptopenjdk:12-jdk-hotspot
 
 CMD ["groovysh"]
 
+ENV GROOVY_HOME /opt/groovy
+
+RUN set -o errexit -o nounset \
+    && echo "Adding groovy user and group" \
+    && groupadd --system --gid 1000 groovy \
+    && useradd --system --gid groovy --uid 1000 --shell /bin/bash --create-home groovy \
+    && mkdir --parents /home/groovy/.groovy/grapes \
+    && chown --recursive groovy:groovy /home/groovy \
+    \
+    && echo "Symlinking root .groovy to groovy .groovy" \
+    && ln -s /home/groovy/.groovy /root/.groovy
+
+VOLUME /home/groovy/.groovy/grapes
+
+WORKDIR /home/groovy
+
 RUN apt-get update \
+    && echo "Installing build dependencies" \
     && apt-get install --yes --no-install-recommends \
-       gnupg \
-       unzip \
-       wget \
+        dirmngr \
+        gnupg \
+        unzip \
+        wget \
     && rm -rf /var/lib/apt/lists/*
 
-ENV GROOVY_HOME /opt/groovy
 ENV GROOVY_VERSION 2.5.7
-
 RUN set -o errexit -o nounset \
     && echo "Downloading Groovy" \
     && wget --no-verbose --output-document=groovy.zip "https://dist.apache.org/repos/dist/release/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip" \
-    \
-    && echo "Installing build dependencies" \
-    && apt-get update \
-    && apt-get update && apt-get install --yes --no-install-recommends \
-        dirmngr \
-        gnupg \
-    && rm --recursive --force /var/lib/apt/lists/* \
     \
     && echo "Importing keys listed in http://www.apache.org/dist/groovy/KEYS from key server" \
     && export GNUPGHOME="$(mktemp -d)"; \
@@ -67,28 +76,9 @@ RUN set -o errexit -o nounset \
     && ln --symbolic "${GROOVY_HOME}/bin/java2groovy" /usr/bin/java2groovy \
     \
     && echo "Editing startGroovy to include java.xml.bind module" \
-    && sed -i 's|startGroovy ( ) {|startGroovy ( ) {\n    JAVA_OPTS="$JAVA_OPTS --add-modules=ALL-SYSTEM"|' "${GROOVY_HOME}/bin/startGroovy" \
-    \
-    && echo "Cleaning up build dependencies" \
-    && echo $(apt-mark showauto) \
-    && apt-get remove --yes --purge \
-        dirmngr \
-        gnupg \
-    && apt-get autoremove --yes --purge \
-    \
-    && echo "Adding groovy user and group" \
-    && groupadd --system --gid 1000 groovy \
-    && useradd --system --gid groovy --uid 1000 --shell /bin/bash --create-home groovy \
-    && mkdir --parents /home/groovy/.groovy/grapes \
-    && chown --recursive groovy:groovy /home/groovy \
-    \
-    && echo "Symlinking root .groovy to groovy .groovy" \
-    && ln -s /home/groovy/.groovy /root/.groovy
+    && sed -i 's|startGroovy ( ) {|startGroovy ( ) {\n    JAVA_OPTS="$JAVA_OPTS --add-modules=ALL-SYSTEM"|' "${GROOVY_HOME}/bin/startGroovy"
 
-# Create Grapes volume
 USER groovy
-VOLUME /home/groovy/.groovy/grapes
-WORKDIR /home/groovy
 
 RUN set -o errexit -o nounset \
     && echo "Testing Groovy installation" \
