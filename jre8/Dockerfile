@@ -12,7 +12,7 @@ RUN set -o errexit -o nounset \
     && chown --recursive groovy:groovy /home/groovy \
     \
     && echo "Symlinking root .groovy to groovy .groovy" \
-    && ln -s /home/groovy/.groovy /root/.groovy
+    && ln --symbolic /home/groovy/.groovy /root/.groovy
 
 VOLUME /home/groovy/.groovy/grapes
 
@@ -25,7 +25,7 @@ RUN apt-get update \
         gnupg \
         unzip \
         wget \
-    && rm -rf /var/lib/apt/lists/*
+    && rm --recursive --force /var/lib/apt/lists/*
 
 ENV GROOVY_VERSION 2.5.7
 RUN set -o errexit -o nounset \
@@ -52,7 +52,7 @@ RUN set -o errexit -o nounset \
             fi; \
         done; \
     done; \
-    if [ $(gpg --batch --no-tty --list-keys | grep -c "pub ") -ne 5 ]; then \
+    if [ $(gpg --batch --no-tty --list-keys | grep --count "pub ") -ne 5 ]; then \
         echo "ERROR: Failed to fetch GPG keys" >&2; \
         exit 1; \
     fi \
