@@ -22,6 +22,7 @@ RUN apt-get update \
     && echo "Installing build dependencies" \
     && apt-get install --yes --no-install-recommends \
         dirmngr \
+        fontconfig \
         gnupg \
         unzip \
         wget \
