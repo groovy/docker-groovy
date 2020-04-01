@@ -31,7 +31,7 @@ RUN apt-get update \
 ENV GROOVY_VERSION 3.0.2
 RUN set -o errexit -o nounset \
     && echo "Downloading Groovy" \
-    && wget --no-verbose --output-document=groovy.zip "https://dist.apache.org/repos/dist/release/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip" \
+    && wget --no-verbose --output-document=groovy.zip "https://archive.apache.org/dist/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip" \
     \
     && echo "Importing keys listed in http://www.apache.org/dist/groovy/KEYS from key server" \
     && export GNUPGHOME="$(mktemp -d)"; \
@@ -59,7 +59,7 @@ RUN set -o errexit -o nounset \
     fi \
     \
     && echo "Checking download signature" \
-    && wget --no-verbose --output-document=groovy.zip.asc "https://dist.apache.org/repos/dist/release/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip.asc" \
+    && wget --no-verbose --output-document=groovy.zip.asc "https://archive.apache.org/dist/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip.asc" \
     && gpg --batch --no-tty --verify groovy.zip.asc groovy.zip \
     && rm --recursive --force "${GNUPGHOME}" \
     && rm groovy.zip.asc \
