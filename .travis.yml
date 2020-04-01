@@ -6,8 +6,8 @@ env:
   - VERSION=jre8
   - VERSION=jdk11
   - VERSION=jre11
-  - VERSION=jdk13
-  - VERSION=jre13
+  - VERSION=jdk14
+  - VERSION=jre14
 
 before_install:
   - env | sort
@@ -22,4 +22,4 @@ install:
 
 script:
   - cd ../test
-  - ./run.sh "${image}" "3.0.1"
+  - ./run.sh "${image}" "3.0.2"
