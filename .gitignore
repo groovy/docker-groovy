@@ -4,5 +4,6 @@ desktop.ini
 */*.zip
 */*.asc
 */*.sha256
+*/KEYS
 
 .idea/
