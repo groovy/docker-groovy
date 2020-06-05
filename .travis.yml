@@ -14,6 +14,7 @@ before_install:
   - cd "${VERSION}${VARIANT:+-$VARIANT}"
   - image="groovy:${VERSION}${VARIANT:+-$VARIANT}"
   - docker images --format "table {{.Repository}}:{{.Tag}}" | tail --lines=+2 | grep "adoptopenjdk" | xargs --no-run-if-empty docker pull
+  - wget --quiet --output-document=- https://github.com/tianon/pgp-happy-eyeballs/raw/master/hack-my-builds.sh | bash
 
 install:
   - docker build --tag "${image}" .
