@@ -39,6 +39,8 @@ docker run --rm -it -v grapes-cache:/home/groovy/.groovy/grapes groovy:latest
 ## Instructions for a new Groovy release
 
 1. Run `update.sh <new Groovy version>` or `update.ps1 <new Groovy version>`.
+1. If a Groovy contributor did a release for the first time (his/her key added to https://downloads.apache.org/groovy/KEYS),
+add the new key to the list of keys used for verification (this is quite infrequent).
 1. Commit and push the changes.
 1. Update [official-images](https://github.com/docker-library/official-images) (and [docs](https://github.com/docker-library/docs) if appropriate).
 

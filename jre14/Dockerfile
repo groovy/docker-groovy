@@ -34,29 +34,13 @@ RUN set -o errexit -o nounset \
     && wget --no-verbose --output-document=groovy.zip "https://archive.apache.org/dist/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip" \
     \
     && echo "Importing keys listed in http://www.apache.org/dist/groovy/KEYS from key server" \
-    && export GNUPGHOME="$(mktemp -d)"; \
-    for key in \
-        "7FAA0F2206DE228F0DB01AD741321490758AAD6F" \
-        "331224E1D7BE883D16E8A685825C06C827AF6B66" \
-        "34441E504A937F43EB0DAEF96A65176A0FB1CD0B" \
-        "9A810E3B766E089FFB27C70F11B595CEDC4AEBB5" \
-        "81CABC23EECA0790E8989B361FF96E10F0E13706" \
-    ; do \
-        for server in \
-            "ha.pool.sks-keyservers.net" \
-            "hkp://p80.pool.sks-keyservers.net:80" \
-            "pgp.mit.edu" \
-        ; do \
-            echo "  Trying ${server}"; \
-            if gpg --batch --no-tty --keyserver "${server}" --recv-keys "${key}"; then \
-                break; \
-            fi; \
-        done; \
-    done; \
-    if [ $(gpg --batch --no-tty --list-keys | grep --count "pub ") -ne 5 ]; then \
-        echo "ERROR: Failed to fetch GPG keys" >&2; \
-        exit 1; \
-    fi \
+    && export GNUPGHOME="$(mktemp -d)" \
+    && gpg --batch --no-tty --keyserver ha.pool.sks-keyservers.net --recv-keys \
+        7FAA0F2206DE228F0DB01AD741321490758AAD6F \
+        331224E1D7BE883D16E8A685825C06C827AF6B66 \
+        34441E504A937F43EB0DAEF96A65176A0FB1CD0B \
+        9A810E3B766E089FFB27C70F11B595CEDC4AEBB5 \
+        81CABC23EECA0790E8989B361FF96E10F0E13706 \
     \
     && echo "Checking download signature" \
     && wget --no-verbose --output-document=groovy.zip.asc "https://archive.apache.org/dist/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip.asc" \
