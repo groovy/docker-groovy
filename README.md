@@ -25,7 +25,17 @@ Note that if you are mounting a volume and the uid running Docker is not _1000_,
 
 ### Running a Groovy script
 
+#### Bash/Zsh
+
 `docker run --rm -v "$PWD":/home/groovy/scripts -w /home/groovy/scripts groovy:latest groovy <script> <script-args>`
+
+#### PowerShell
+
+`docker run --rm -v "${pwd}:/home/groovy/scripts" -w /home/groovy/scripts groovy:latest groovy <script> <script-args>`
+
+#### Windows CMD
+
+`docker run --rm -v "%cd%:/home/groovy/scripts" -w /home/groovy/scripts groovy:latest groovy <script> <script-args>`
 
 ### Reusing the Grapes cache
 
