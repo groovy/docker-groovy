@@ -10,6 +10,7 @@ RUN set -o errexit -o nounset \
     && useradd --system --gid groovy --uid 1000 --shell /bin/bash --create-home groovy \
     && mkdir --parents /home/groovy/.groovy/grapes \
     && chown --recursive groovy:groovy /home/groovy \
+    && chmod --recursive 1777 /home/groovy \
     \
     && echo "Symlinking root .groovy to groovy .groovy" \
     && ln --symbolic /home/groovy/.groovy /root/.groovy
