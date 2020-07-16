@@ -46,6 +46,28 @@ docker volume create --name grapes-cache
 docker run --rm -it -v grapes-cache:/home/groovy/.groovy/grapes groovy:latest
 ```
 
+Note when running as another user (other than _groovy_ or _root_), you will need to tell Groovy what home to use for Grapes with `-D user.home=/home/groovy`.
+
+Alternatively, you can specify this through the Grapes config, using `-D grape.config=/home/groovy/scripts/grapesConfig.xml` and
+
+```xml
+<!-- same thing as https://github.com/apache/groovy/blob/master/src/resources/groovy/grape/defaultGrapeConfig.xml, but with ${user.home} replaced with /home/groovy -->
+<ivysettings>
+  <settings defaultResolver="downloadGrapes"/>
+  <resolvers>
+    <chain name="downloadGrapes" returnFirst="true">
+      <filesystem name="cachedGrapes">
+        <ivy pattern="/home/groovy/.groovy/grapes/[organisation]/[module]/ivy-[revision].xml"/>
+        <artifact pattern="/home/groovy/.groovy/grapes/[organisation]/[module]/[type]s/[artifact]-[revision].[ext]"/>
+      </filesystem>
+      <ibiblio name="localm2" root="/home/groovy/.m2/repository/" checkmodified="true" changingPattern=".*" changingMatcher="regexp" m2compatible="true"/>
+      <ibiblio name="jcenter" root="https://jcenter.bintray.com/" m2compatible="true"/>
+      <ibiblio name="ibiblio" m2compatible="true"/>
+    </chain>
+  </resolvers>
+</ivysettings>
+```
+
 ## Instructions for a new Groovy release
 
 1. Run `update.sh <new Groovy version>` or `update.ps1 <new Groovy version>`.
