@@ -1,4 +1,4 @@
-FROM adoptopenjdk:14-jdk-hotspot
+FROM adoptopenjdk:15-jdk-hotspot
 
 CMD ["groovysh"]
 
