@@ -8,8 +8,8 @@
 * [jdk11](https://github.com/groovy/docker-groovy/blob/master/jdk11/Dockerfile)
 * [jre11](https://github.com/groovy/docker-groovy/blob/master/jre11/Dockerfile)
 
-* [jdk14](https://github.com/groovy/docker-groovy/blob/master/jdk14/Dockerfile)
-* [jre14](https://github.com/groovy/docker-groovy/blob/master/jre14/Dockerfile)
+* [jdk15](https://github.com/groovy/docker-groovy/blob/master/jdk15/Dockerfile)
+* [jre15](https://github.com/groovy/docker-groovy/blob/master/jre15/Dockerfile)
 
 ## What is Groovy?
 
