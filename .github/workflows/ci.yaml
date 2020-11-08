@@ -1,0 +1,34 @@
+name: GitHub CI
+
+on: [push]
+
+defaults:
+  run:
+    shell: 'bash -Eeuo pipefail -x {0}'
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        jvmType: [jdk, jre]
+        version: [8, 11, 15]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: build
+        env:
+          jvmType: ${{ matrix.jvmType }}
+          version: ${{ matrix.version }}
+        run: |
+          cd "${jvmType}${version}"
+          docker pull "adoptopenjdk:${version}-${jvmType}-hotspot"
+          docker build --tag "groovy:${jvmType}${version}" .
+      - name: test
+        env:
+          jvmType: ${{ matrix.jvmType }}
+          version: ${{ matrix.version }}
+          expectedGroovyVersion: 3.0.6
+        run: |
+          cd test
+          ./run.sh "groovy:${jvmType}${version}" "${expectedGroovyVersion}"

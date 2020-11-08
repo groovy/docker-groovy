@@ -77,4 +77,4 @@ add the new key to the list of keys used for verification (this is quite infrequ
 1. Update [official-images](https://github.com/docker-library/official-images) (and [docs](https://github.com/docker-library/docs) if appropriate).
 
 ---
-![Travis Build Status](https://travis-ci.org/groovy/docker-groovy.svg?branch=master)
+[![Build status badge](https://github.com/groovy/docker-groovy/workflows/GitHub%20CI/badge.svg)](https://github.com/groovy/docker-groovy/actions?query=workflow%3A%22GitHub+CI%22)
