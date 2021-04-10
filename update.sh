@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -o errexit -o nounset
+set -o errexit -o nounset -o pipefail
 
 groovyVersion=${1}
 
