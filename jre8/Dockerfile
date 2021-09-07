@@ -36,7 +36,7 @@ RUN set -o errexit -o nounset \
     \
     && echo "Importing keys listed in http://www.apache.org/dist/groovy/KEYS from key server" \
     && export GNUPGHOME="$(mktemp -d)" \
-    && gpg --batch --no-tty --keyserver ha.pool.sks-keyservers.net --recv-keys \
+    && gpg --batch --no-tty --keyserver keyserver.ubuntu.com --recv-keys \
         7FAA0F2206DE228F0DB01AD741321490758AAD6F \
         331224E1D7BE883D16E8A685825C06C827AF6B66 \
         34441E504A937F43EB0DAEF96A65176A0FB1CD0B \
