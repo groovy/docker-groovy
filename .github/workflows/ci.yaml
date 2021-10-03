@@ -11,24 +11,21 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        jvmType: [jdk, jre]
         version: [8, 11, 17]
     steps:
       - name: checkout
         uses: actions/checkout@v2
       - name: build
         env:
-          jvmType: ${{ matrix.jvmType }}
           version: ${{ matrix.version }}
         run: |
-          cd "${jvmType}${version}"
+          cd "jdk${version}"
           docker pull "eclipse-temurin:${version}-jdk"
-          docker build --tag "groovy:${jvmType}${version}" .
+          docker build --tag "groovy:jdk${version}" .
       - name: test
         env:
-          jvmType: ${{ matrix.jvmType }}
           version: ${{ matrix.version }}
           expectedGroovyVersion: 3.0.9
         run: |
           cd test
-          ./run.sh "groovy:${jvmType}${version}" "${expectedGroovyVersion}"
+          ./run.sh "groovy:jdk${version}" "${expectedGroovyVersion}"
