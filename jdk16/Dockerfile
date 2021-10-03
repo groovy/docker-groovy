@@ -1,4 +1,4 @@
-FROM adoptopenjdk:16-jdk-hotspot
+FROM eclipse-temurin:16-jdk
 
 CMD ["groovysh"]
 

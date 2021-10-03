@@ -22,7 +22,7 @@ jobs:
           version: ${{ matrix.version }}
         run: |
           cd "${jvmType}${version}"
-          docker pull "adoptopenjdk:${version}-${jvmType}-hotspot"
+          docker pull "eclipse-temurin:${version}-jdk"
           docker build --tag "groovy:${jvmType}${version}" .
       - name: test
         env:
