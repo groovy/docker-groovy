@@ -1,4 +1,4 @@
-FROM eclipse-temurin:16-jdk
+FROM eclipse-temurin:17-jdk
 
 CMD ["groovysh"]
 
