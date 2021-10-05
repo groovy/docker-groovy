@@ -2,14 +2,9 @@
 
 ## Supported tags and respective Dockerfile links
 
-* [jdk8, jdk](https://github.com/groovy/docker-groovy/blob/master/jdk8/Dockerfile)
-* [latest, jre8, jre](https://github.com/groovy/docker-groovy/blob/master/jre8/Dockerfile)
-
+* [jdk8](https://github.com/groovy/docker-groovy/blob/master/jdk8/Dockerfile)
 * [jdk11](https://github.com/groovy/docker-groovy/blob/master/jdk11/Dockerfile)
-* [jre11](https://github.com/groovy/docker-groovy/blob/master/jre11/Dockerfile)
-
-* [jdk16](https://github.com/groovy/docker-groovy/blob/master/jdk16/Dockerfile)
-* [jre16](https://github.com/groovy/docker-groovy/blob/master/jre16/Dockerfile)
+* [jdk17, jdk, latest](https://github.com/groovy/docker-groovy/blob/master/jdk17/Dockerfile)
 
 ## What is Groovy?
 
