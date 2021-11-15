@@ -7,7 +7,7 @@ ENV GROOVY_HOME /opt/groovy
 RUN set -o errexit -o nounset \
     && echo "Adding groovy user and group" \
     && addgroup --system --gid 1000 groovy \
-    && adduser --system --ingroup groovy --uid 1000 --shell /bin/bash groovy \
+    && adduser --system --ingroup groovy --uid 1000 --shell /bin/ash groovy \
     && mkdir --parents /home/groovy/.groovy/grapes \
     && chown -R groovy:groovy /home/groovy \
     && chmod -R 1777 /home/groovy \
