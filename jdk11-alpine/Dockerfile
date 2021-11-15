@@ -19,20 +19,6 @@ VOLUME /home/groovy/.groovy/grapes
 
 WORKDIR /home/groovy
 
-RUN set -o errexit -o nounset \
-    && echo "Installing VCSes" \
-    && apk add --no-cache \
-      git \
-      git-lfs \
-      mercurial \
-      subversion \
-    \
-    && echo "Testing VCSes" \
-    && which git \
-    && which git-lfs \
-    && which hg \
-    && which svn
-
 ENV GROOVY_VERSION 3.0.9
 RUN set -o errexit -o nounset \
     && echo "Installing build dependencies" \
