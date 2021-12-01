@@ -32,7 +32,7 @@ jobs:
       - name: test
         env:
           version: ${{ matrix.version }}
-          expectedGroovyVersion: 4.0.0-beta-2
+          expectedGroovyVersion: 4.0.0-rc-1
         run: |
           cd test
           ./run.sh "groovy:${version}" "${expectedGroovyVersion}"
