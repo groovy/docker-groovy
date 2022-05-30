@@ -18,8 +18,15 @@ if [[ "${version}" != "${expectedGroovyVersion}" ]]; then
     exit 1
 fi
 
-docker run --user "${user}" --rm --volume "${PWD}:${home}/scripts" --workdir "${home}/scripts" "${image}" groovy grape.groovy
-if [[ $? -ne 0 ]]; then
+case "$(uname -s)" in
+  CYGWIN*|MINGW32*|MSYS*|MINGW*)
+    pwd=$(cygpath --windows "${PWD}")
+    ;;
+  *)
+    pwd="${PWD}"
+    ;;
+esac
+if ! docker run --user "${user}" --rm --volume "${pwd}:${home}/scripts" --workdir "${home}/scripts" "${image}" groovy grape.groovy; then
     echo "No Grape cached files found" >&2
     exit 1
 fi
