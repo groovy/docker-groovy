@@ -19,7 +19,7 @@ VOLUME /home/groovy/.groovy/grapes
 
 WORKDIR /home/groovy
 
-ENV GROOVY_VERSION 3.0.12
+ENV GROOVY_VERSION 3.0.13
 RUN set -o errexit -o nounset \
     && echo "Installing build dependencies" \
     && apk add --no-cache --virtual .build-deps \
