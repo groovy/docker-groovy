@@ -63,7 +63,7 @@ RUN set -o errexit -o nounset \
     && echo "Editing startGroovy to include java.xml.bind module" \
     && sed --in-place 's|startGroovy ( ) {|startGroovy ( ) {\n    JAVA_OPTS="$JAVA_OPTS --add-modules=ALL-SYSTEM"|' "${GROOVY_HOME}/bin/startGroovy"
 
-USER groovy
+USER 1000:1000
 
 RUN set -o errexit -o nounset \
     && echo "Testing Groovy installation" \

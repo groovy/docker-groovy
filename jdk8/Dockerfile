@@ -60,7 +60,7 @@ RUN set -o errexit -o nounset \
     && ln --symbolic "${GROOVY_HOME}/bin/groovysh" /usr/bin/groovysh \
     && ln --symbolic "${GROOVY_HOME}/bin/java2groovy" /usr/bin/java2groovy
 
-USER groovy
+USER 1000:1000
 
 RUN set -o errexit -o nounset \
     && echo "Testing Groovy installation" \
