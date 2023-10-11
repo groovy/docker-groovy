@@ -4,7 +4,8 @@
 
 * [jdk8](https://github.com/groovy/docker-groovy/blob/master/jdk8/Dockerfile)
 * [jdk11](https://github.com/groovy/docker-groovy/blob/master/jdk11/Dockerfile)
-* [jdk17, latest](https://github.com/groovy/docker-groovy/blob/master/jdk17/Dockerfile)
+* [jdk17](https://github.com/groovy/docker-groovy/blob/master/jdk17/Dockerfile)
+* [jdk21, latest](https://github.com/groovy/docker-groovy/blob/master/jdk21/Dockerfile)
 
 ## What is Groovy?
 
