@@ -40,7 +40,7 @@ RUN set -o errexit -o nounset \
     && echo "Checking download signature" \
     && wget --no-verbose --output-document=groovy.zip.asc "https://archive.apache.org/dist/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip.asc" \
     && gpg --batch --no-tty --verify groovy.zip.asc groovy.zip \
-    && rm -rf "${GNUPGHOME}" \
+    && (rm -rf "${GNUPGHOME}" || true) \
     && rm groovy.zip.asc \
     \
     && echo "Cleaning up build dependencies" \
