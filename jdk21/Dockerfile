@@ -53,6 +53,7 @@ RUN set -o errexit -o nounset \
     && unzip groovy.zip \
     && rm groovy.zip \
     && mv "groovy-${GROOVY_VERSION}" "${GROOVY_HOME}/" \
+    && rm --force "${GROOVY_HOME}/lib/groovy-raw-${GROOVY_VERSION}-raw.jar" \
     && ln --symbolic "${GROOVY_HOME}/bin/grape" /usr/bin/grape \
     && ln --symbolic "${GROOVY_HOME}/bin/groovy" /usr/bin/groovy \
     && ln --symbolic "${GROOVY_HOME}/bin/groovyc" /usr/bin/groovyc \
