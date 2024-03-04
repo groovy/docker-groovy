@@ -29,7 +29,7 @@ RUN set -o errexit -o nounset \
         wget \
     && rm --recursive --force /var/lib/apt/lists/*
 
-ENV GROOVY_VERSION 4.0.18
+ENV GROOVY_VERSION 4.0.19
 RUN set -o errexit -o nounset \
     && echo "Downloading Groovy" \
     && wget --no-verbose --output-document=groovy.zip "https://archive.apache.org/dist/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip" \
@@ -53,6 +53,7 @@ RUN set -o errexit -o nounset \
     && unzip groovy.zip \
     && rm groovy.zip \
     && mv "groovy-${GROOVY_VERSION}" "${GROOVY_HOME}/" \
+    && rm --force "${GROOVY_HOME}/lib/groovy-raw-${GROOVY_VERSION}-raw.jar" \
     && ln --symbolic "${GROOVY_HOME}/bin/grape" /usr/bin/grape \
     && ln --symbolic "${GROOVY_HOME}/bin/groovy" /usr/bin/groovy \
     && ln --symbolic "${GROOVY_HOME}/bin/groovyc" /usr/bin/groovyc \

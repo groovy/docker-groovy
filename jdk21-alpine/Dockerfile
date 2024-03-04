@@ -19,7 +19,7 @@ VOLUME /home/groovy/.groovy/grapes
 
 WORKDIR /home/groovy
 
-ENV GROOVY_VERSION 4.0.18
+ENV GROOVY_VERSION 4.0.19
 RUN set -o errexit -o nounset \
     && echo "Installing build dependencies" \
     && apk add --no-cache --virtual .build-deps \
@@ -50,6 +50,7 @@ RUN set -o errexit -o nounset \
     && unzip groovy.zip \
     && rm groovy.zip \
     && mv "groovy-${GROOVY_VERSION}" "${GROOVY_HOME}/" \
+    && rm -f "${GROOVY_HOME}/lib/groovy-raw-${GROOVY_VERSION}-raw.jar" \
     && ln -s "${GROOVY_HOME}/bin/grape" /usr/bin/grape \
     && ln -s "${GROOVY_HOME}/bin/groovy" /usr/bin/groovy \
     && ln -s "${GROOVY_HOME}/bin/groovyc" /usr/bin/groovyc \
