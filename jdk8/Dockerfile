@@ -19,7 +19,8 @@ VOLUME /home/groovy/.groovy/grapes
 
 WORKDIR /home/groovy
 
-RUN apt-get update \
+RUN set -o errexit -o nounset \
+    && apt-get update \
     && echo "Installing build dependencies" \
     && apt-get install --yes --no-install-recommends \
         dirmngr \
