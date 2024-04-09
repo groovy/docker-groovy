@@ -29,7 +29,7 @@ RUN set -o errexit -o nounset \
         wget \
     && rm --recursive --force /var/lib/apt/lists/*
 
-ENV GROOVY_VERSION 4.0.20
+ENV GROOVY_VERSION 4.0.21
 RUN set -o errexit -o nounset \
     && echo "Downloading Groovy" \
     && wget --no-verbose --output-document=groovy.zip "https://archive.apache.org/dist/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip" \
