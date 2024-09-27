@@ -2,7 +2,7 @@ FROM eclipse-temurin:11-jdk-alpine
 
 CMD ["groovysh"]
 
-ENV GROOVY_HOME /opt/groovy
+ENV GROOVY_HOME=/opt/groovy
 
 RUN set -o errexit -o nounset \
     && echo "Adding groovy user and group" \
@@ -19,7 +19,7 @@ VOLUME /home/groovy/.groovy/grapes
 
 WORKDIR /home/groovy
 
-ENV GROOVY_VERSION 4.0.22
+ENV GROOVY_VERSION=4.0.22
 RUN set -o errexit -o nounset \
     && echo "Installing build dependencies" \
     && apk add --no-cache --virtual .build-deps \
