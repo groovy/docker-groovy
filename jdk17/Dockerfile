@@ -1,13 +1,15 @@
-FROM eclipse-temurin:17-jdk-jammy
+FROM eclipse-temurin:17-jdk-noble
 
 CMD ["groovysh"]
 
 ENV GROOVY_HOME=/opt/groovy
 
 RUN set -o errexit -o nounset \
-    && echo "Adding groovy user and group" \
-    && groupadd --system --gid 1000 groovy \
-    && useradd --system --gid groovy --uid 1000 --shell /bin/bash --create-home groovy \
+    && echo "Renaming ubuntu user and group to groovy" \
+    && groupmod --new-name groovy ubuntu \
+    && mkdir /home/groovy \
+    && usermod --login groovy --home /home/groovy --groups groovy ubuntu \
+    && chown groovy /home/groovy \
     && mkdir --parents /home/groovy/.groovy/grapes \
     && chown --recursive groovy:groovy /home/groovy \
     && chmod --recursive 1777 /home/groovy \
