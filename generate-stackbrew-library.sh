@@ -104,7 +104,7 @@ for dir in "${directories[@]}"; do
 
 	fromTag="${from##*:}"
 	suite="${fromTag%-jdk}"
-	suite="${suite##*-}" # "noble", "jammy", "al2023", etc
+	suite="${suite##*-}" # "noble", "jammy", etc
 	jdk="${dir%%-*}" # "jdk8", etc
 
 	# identify image "variant" so we can assign tags based on variant

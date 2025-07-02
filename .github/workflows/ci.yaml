@@ -17,29 +17,22 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version:
-          - 8-jdk-jammy
-          - 11-jdk-jammy
-          - 11-jdk-alpine
-          - 17-jdk-jammy
-          - 17-jdk-alpine
-          - 21-jdk-jammy
-          - 21-jdk-alpine
+        directory:
+          - jdk8
+          - jdk11
+          - jdk17
+          - jdk21
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: build
-        env:
-          version: ${{ matrix.version }}
         run: |
-          directory=$(echo "jdk${version}" | sed 's/-jdk//' | sed 's/-jammy//')
-          cd "${directory}"
-          docker pull "eclipse-temurin:${version}"
-          docker build --tag "groovy:${version}" .
+          cd "${{ matrix.directory }}"
+          grep "FROM " Dockerfile | cut -d' ' -f2 | xargs -I{} docker pull {}
+          docker build --tag "groovy:${{ matrix.directory }}" .
       - name: test
         env:
-          version: ${{ matrix.version }}
           expectedGroovyVersion: 4.0.27
         run: |
           cd test
-          ./run.sh "groovy:${version}" "${expectedGroovyVersion}"
+          ./run.sh "groovy:${{ matrix.directory }}" "${expectedGroovyVersion}"
