@@ -28,13 +28,12 @@ RUN set -o errexit -o nounset \
         dirmngr \
         gnupg \
         unzip \
-        wget \
     && rm --recursive --force /var/lib/apt/lists/*
 
 ENV GROOVY_VERSION=4.0.27
 RUN set -o errexit -o nounset \
     && echo "Downloading Groovy" \
-    && wget --no-verbose --output-document=groovy.zip "https://archive.apache.org/dist/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip" \
+    && curl --fail --show-error --silent --output groovy.zip --location "https://archive.apache.org/dist/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip" \
     \
     && echo "Importing keys listed in http://www.apache.org/dist/groovy/KEYS from key server" \
     && export GNUPGHOME="$(mktemp -d)" \
@@ -46,7 +45,7 @@ RUN set -o errexit -o nounset \
         81CABC23EECA0790E8989B361FF96E10F0E13706 \
     \
     && echo "Checking download signature" \
-    && wget --no-verbose --output-document=groovy.zip.asc "https://archive.apache.org/dist/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip.asc" \
+    && curl --fail --show-error --silent --output groovy.zip.asc --location "https://archive.apache.org/dist/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip.asc" \
     && gpg --batch --no-tty --verify groovy.zip.asc groovy.zip \
     && rm --recursive --force "${GNUPGHOME}" \
     && rm groovy.zip.asc \
