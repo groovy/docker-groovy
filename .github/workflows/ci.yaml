@@ -18,10 +18,10 @@ jobs:
     strategy:
       matrix:
         directory:
-          - jdk8
           - jdk11
           - jdk17
           - jdk21
+          - jdk25
     steps:
       - name: checkout
         uses: actions/checkout@v4
@@ -32,7 +32,7 @@ jobs:
           docker build --tag "groovy:${{ matrix.directory }}" .
       - name: test
         env:
-          expectedGroovyVersion: 4.0.27
+          expectedGroovyVersion: 5.0.3
         run: |
           cd test
           ./run.sh "groovy:${{ matrix.directory }}" "${expectedGroovyVersion}"

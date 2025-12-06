@@ -1,30 +1,38 @@
-FROM eclipse-temurin:17-jdk-alpine
+FROM eclipse-temurin:25-jdk-noble
 
 CMD ["groovysh"]
 
 ENV GROOVY_HOME=/opt/groovy
 
 RUN set -o errexit -o nounset \
-    && echo "Adding groovy user and group" \
-    && addgroup --system --gid 1000 groovy \
-    && adduser --system --ingroup groovy --uid 1000 --shell /bin/ash groovy \
+    && echo "Renaming ubuntu user and group to groovy" \
+    && groupmod --new-name groovy ubuntu \
+    && mkdir /home/groovy \
+    && usermod --login groovy --home /home/groovy --groups groovy ubuntu \
+    && chown groovy /home/groovy \
     && mkdir --parents /home/groovy/.groovy/grapes \
-    && chown -R groovy:groovy /home/groovy \
-    && chmod -R 1777 /home/groovy \
+    && chown --recursive groovy:groovy /home/groovy \
+    && chmod --recursive 1777 /home/groovy \
     \
     && echo "Symlinking root .groovy to groovy .groovy" \
-    && ln -s /home/groovy/.groovy /root/.groovy
+    && ln --symbolic /home/groovy/.groovy /root/.groovy
 
 VOLUME /home/groovy/.groovy/grapes
 
 WORKDIR /home/groovy
 
+RUN set -o errexit -o nounset \
+    && apt-get update \
+    && echo "Installing build dependencies" \
+    && apt-get install --yes --no-install-recommends \
+        dirmngr \
+        gnupg \
+        unzip \
+        wget \
+    && rm --recursive --force /var/lib/apt/lists/*
+
 ENV GROOVY_VERSION=5.0.3
 RUN set -o errexit -o nounset \
-    && echo "Installing build dependencies" \
-    && apk add --no-cache --virtual .build-deps \
-        gnupg \
-    \
     && echo "Downloading Groovy" \
     && wget --no-verbose --output-document=groovy.zip "https://archive.apache.org/dist/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip" \
     \
@@ -40,24 +48,21 @@ RUN set -o errexit -o nounset \
     && echo "Checking download signature" \
     && wget --no-verbose --output-document=groovy.zip.asc "https://archive.apache.org/dist/groovy/${GROOVY_VERSION}/distribution/apache-groovy-binary-${GROOVY_VERSION}.zip.asc" \
     && gpg --batch --no-tty --verify groovy.zip.asc groovy.zip \
-    && (rm -rf "${GNUPGHOME}" || true) \
+    && rm --recursive --force "${GNUPGHOME}" \
     && rm groovy.zip.asc \
-    \
-    && echo "Cleaning up build dependencies" \
-    && apk del .build-deps \
     \
     && echo "Installing Groovy" \
     && unzip groovy.zip \
     && rm groovy.zip \
     && mv "groovy-${GROOVY_VERSION}" "${GROOVY_HOME}/" \
-    && rm -f "${GROOVY_HOME}/lib/groovy-raw-${GROOVY_VERSION}-raw.jar" \
-    && ln -s "${GROOVY_HOME}/bin/grape" /usr/bin/grape \
-    && ln -s "${GROOVY_HOME}/bin/groovy" /usr/bin/groovy \
-    && ln -s "${GROOVY_HOME}/bin/groovyc" /usr/bin/groovyc \
-    && ln -s "${GROOVY_HOME}/bin/groovyConsole" /usr/bin/groovyConsole \
-    && ln -s "${GROOVY_HOME}/bin/groovydoc" /usr/bin/groovydoc \
-    && ln -s "${GROOVY_HOME}/bin/groovysh" /usr/bin/groovysh \
-    && ln -s "${GROOVY_HOME}/bin/java2groovy" /usr/bin/java2groovy \
+    && rm --force "${GROOVY_HOME}/lib/groovy-raw-${GROOVY_VERSION}-raw.jar" \
+    && ln --symbolic "${GROOVY_HOME}/bin/grape" /usr/bin/grape \
+    && ln --symbolic "${GROOVY_HOME}/bin/groovy" /usr/bin/groovy \
+    && ln --symbolic "${GROOVY_HOME}/bin/groovyc" /usr/bin/groovyc \
+    && ln --symbolic "${GROOVY_HOME}/bin/groovyConsole" /usr/bin/groovyConsole \
+    && ln --symbolic "${GROOVY_HOME}/bin/groovydoc" /usr/bin/groovydoc \
+    && ln --symbolic "${GROOVY_HOME}/bin/groovysh" /usr/bin/groovysh \
+    && ln --symbolic "${GROOVY_HOME}/bin/java2groovy" /usr/bin/java2groovy \
     \
     && echo "Editing startGroovy to include java.xml.bind module" \
     && sed --in-place 's|startGroovy ( ) {|startGroovy ( ) {\n    JAVA_OPTS="$JAVA_OPTS --add-modules=ALL-SYSTEM"|' "${GROOVY_HOME}/bin/startGroovy"
