@@ -18,7 +18,6 @@ jobs:
     strategy:
       matrix:
         directory:
-          - jdk8
           - jdk11
           - jdk17
           - jdk21
