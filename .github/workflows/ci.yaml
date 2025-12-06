@@ -32,7 +32,7 @@ jobs:
           docker build --tag "groovy:${{ matrix.directory }}" .
       - name: test
         env:
-          expectedGroovyVersion: 4.0.27
+          expectedGroovyVersion: 5.0.3
         run: |
           cd test
           ./run.sh "groovy:${{ matrix.directory }}" "${expectedGroovyVersion}"
