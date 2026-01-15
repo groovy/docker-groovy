@@ -9,6 +9,8 @@
 * [jdk17-alpine](https://github.com/groovy/docker-groovy/blob/master/jdk17-alpine/Dockerfile)
 * [jdk21](https://github.com/groovy/docker-groovy/blob/master/jdk21/Dockerfile)
 * [jdk21-alpine](https://github.com/groovy/docker-groovy/blob/master/jdk21-alpine/Dockerfile)
+* [jdk25](https://github.com/groovy/docker-groovy/blob/master/jdk25/Dockerfile)
+* [jdk25-alpine](https://github.com/groovy/docker-groovy/blob/master/jdk25-alpine/Dockerfile)
 
 ## What is Groovy?
 
