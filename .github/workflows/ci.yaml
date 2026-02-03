@@ -16,22 +16,35 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        directory:
+        groovy-version:
+          - groovy-3
+          - groovy-4
+          - groovy-5
+        java-version:
+          - jdk8
           - jdk11
           - jdk17
           - jdk21
+        variant:
+          - ''
+          - '-alpine'
+        exclude:
+          - groovy-version: groovy-5
+            java-version: jdk8
     steps:
       - name: checkout
         uses: actions/checkout@v4
       - name: build
         run: |
-          cd "${{ matrix.directory }}"
+          cd "${{ matrix.groovy-version }}/${{ matrix.java-version }}${{ matrix.variant }}"
           grep "FROM " Dockerfile | cut -d' ' -f2 | xargs -I{} docker pull {}
-          docker build --tag "groovy:${{ matrix.directory }}" .
+          docker build --tag "groovy:${{ matrix.groovy-version }}-${{ matrix.java-version }}${{ matrix.variant }}" .
       - name: test
-        env:
-          expectedGroovyVersion: 5.0.4
         run: |
+          # Extract version from Dockerfile
+          groovyVersion=$(grep "ENV GROOVY_VERSION=" "${{ matrix.groovy-version }}/${{ matrix.java-version }}${{ matrix.variant }}/Dockerfile" | cut -d= -f2)
+          
           cd test
-          ./run.sh "groovy:${{ matrix.directory }}" "${expectedGroovyVersion}"
+          ./run.sh "groovy:${{ matrix.groovy-version }}-${{ matrix.java-version }}${{ matrix.variant }}" "${groovyVersion}"
