@@ -1,4 +1,4 @@
-FROM eclipse-temurin:11-jdk-alpine
+FROM eclipse-temurin:21-jdk-alpine-3.23
 
 CMD ["groovysh"]
 
@@ -19,7 +19,7 @@ VOLUME /home/groovy/.groovy/grapes
 
 WORKDIR /home/groovy
 
-ENV GROOVY_VERSION=5.0.4
+ENV GROOVY_VERSION=3.0.25
 RUN set -o errexit -o nounset \
     && echo "Installing build dependencies" \
     && apk add --no-cache --virtual .build-deps \

@@ -7,8 +7,6 @@ $ErrorActionPreference = "Stop"
 # front-load the "command-not-found" notices
 bashbrew --version > $null
 
-$gitRemote = (git remote -v | Select-String 'groovy/docker-groovy' | ForEach-Object { $_.Line.Split()[0] })[0]
-
 @"
 Maintainers: Keegan Witt <keeganwitt@gmail.com> (@keeganwitt)
 GitRepo: https://github.com/groovy/docker-groovy.git
@@ -17,10 +15,10 @@ GitRepo: https://github.com/groovy/docker-groovy.git
 $usedTags = @{}
 $archesLookupCache = @{}
 
-$commit = git rev-parse "refs/remotes/$gitRemote/master"
+$commit = git rev-parse HEAD
+$branch = git rev-parse --abbrev-ref HEAD
 $common = @"
-GitFetch: refs/heads/master
-GitCommit: $commit
+GitFetch: refs/heads/$branch
 "@
 
 $allDirectories = git ls-tree -r --name-only "$commit" |
@@ -29,7 +27,12 @@ $allDirectories = git ls-tree -r --name-only "$commit" |
 
 $directoriesWithSortKeys = @()
 foreach ($dir in $allDirectories) {
-    $jdkPart = ($dir -split '-')[0] -replace 'jdk', ''
+    # dir is like groovy-3/jdk11
+    $groovyPart = $dir.Split('/')[0].Split('-')[1]
+    $groovyNum = [int]$groovyPart
+    $groovySort = -$groovyNum
+
+    $jdkPart = $dir.Split('/')[1].Split('-')[0] -replace 'jdk', ''
     $jdkNum = [int]$jdkPart
 
     $primaryJdkSort = if ($jdkNum -in @(21, 17, 11, 8)) { 0 } else { 1 }
@@ -43,15 +46,15 @@ foreach ($dir in $allDirectories) {
 
     $directoriesWithSortKeys += [PSCustomObject]@{
         Directory = $dir
-        SortKeys = @($primaryJdkSort, $secondaryJdkSort, $variantSort, $suiteSort, $dir)
+        SortKeys = @($groovySort, $primaryJdkSort, $secondaryJdkSort, $variantSort, $suiteSort, $dir)
     }
 }
 
 $directories = $directoriesWithSortKeys |
-               Sort-Object -Property { $_.SortKeys[0] }, { $_.SortKeys[1] }, { $_.SortKeys[2] }, { $_.SortKeys[3] }, { $_.SortKeys[4] } |
+               Sort-Object -Property { $_.SortKeys[0] }, { $_.SortKeys[1] }, { $_.SortKeys[2] }, { $_.SortKeys[3] }, { $_.SortKeys[4] }, { $_.SortKeys[5] } |
                Select-Object -ExpandProperty Directory
 
-$firstVersion = $null
+$firstVersions = @{}
 foreach ($dir in $directories) {
     if (-not (Test-Path $dir)) {
         continue
@@ -65,16 +68,23 @@ foreach ($dir in $directories) {
         $version = "$version.0"
     }
 
-    if (-not $firstVersion) {
-        $firstVersion = $version
+    $majorVersion = $version.Split('.')[0]
+
+    if (-not $firstVersions.ContainsKey($majorVersion)) {
+        $firstVersions[$majorVersion] = $version
     }
-    if ($version -ne $firstVersion) {
-        Write-Error "$dir contains $version (compared to $firstVersion in $($directories[0]))"
+    if ($version -ne $firstVersions[$majorVersion]) {
+        Write-Error "$dir contains $version (compared to $($firstVersions[$majorVersion]) in other images of major version $majorVersion)"
     }
+
+    # Get the git commit for the specific directory
+    $majorDir = $dir -split '/' | Select-Object -First 1
+    $commit = git log -1 --format='%H' -- "$majorDir"
 
     $fromTag = $from.Split(':')[-1]
     $suite = $fromTag -replace '-jdk$', '' -replace '.*-', ''
-    $jdk = $dir.Split('-')[0]
+    $dirName = $dir | Split-Path -Leaf
+    $jdk = $dirName.Split('-')[0]
 
     switch -wildcard ($dir) {
         '*-alpine'   { $variant = 'alpine' }
@@ -100,7 +110,9 @@ foreach ($dir in $directories) {
     switch ($variant) {
         '' {
             $tags += $versions | ForEach-Object { "$_-$jdk-$suite" }
-            $tags += 'latest'
+            if ($version -match "^5\.") {
+                $tags += 'latest'
+            }
             $tags += $versions | ForEach-Object { "$_-jdk" }
             $tags += $versions
             $tags += $versions | ForEach-Object { "$_-jdk-$suite" }
@@ -109,6 +121,9 @@ foreach ($dir in $directories) {
         'alpine' {
             $tags += $versions | ForEach-Object { "$_-jdk-alpine" }
             $tags += $versions | ForEach-Object { "$_-alpine" }
+            if ($version -match "^5\.") {
+                $tags += 'alpine'
+            }
         }
     }
 
@@ -136,6 +151,7 @@ foreach ($dir in $directories) {
 Tags: $actualTagsString
 Architectures: $arches
 $common
+GitCommit: $commit
 Directory: $dir
 "@
 }

@@ -2,13 +2,31 @@
 
 ## Supported tags and respective Dockerfile links
 
-* [jdk8](https://github.com/groovy/docker-groovy/blob/master/jdk8/Dockerfile)
-* [jdk11](https://github.com/groovy/docker-groovy/blob/master/jdk11/Dockerfile)
-* [jdk11-alpine](https://github.com/groovy/docker-groovy/blob/master/jdk11-alpine/Dockerfile)
-* [jdk17](https://github.com/groovy/docker-groovy/blob/master/jdk17/Dockerfile)
-* [jdk17-alpine](https://github.com/groovy/docker-groovy/blob/master/jdk17-alpine/Dockerfile)
-* [jdk21](https://github.com/groovy/docker-groovy/blob/master/jdk21/Dockerfile)
-* [jdk21-alpine](https://github.com/groovy/docker-groovy/blob/master/jdk21-alpine/Dockerfile)
+* Groovy 3
+    * [jdk8](https://github.com/groovy/docker-groovy/blob/master/groovy-3/jdk8/Dockerfile)
+    * [jdk8-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-3/jdk8-alpine/Dockerfile)
+    * [jdk11](https://github.com/groovy/docker-groovy/blob/master/groovy-3/jdk11/Dockerfile)
+    * [jdk11-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-3/jdk11-alpine/Dockerfile)
+    * [jdk17](https://github.com/groovy/docker-groovy/blob/master/groovy-3/jdk17/Dockerfile)
+    * [jdk17-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-3/jdk17-alpine/Dockerfile)
+    * [jdk21](https://github.com/groovy/docker-groovy/blob/master/groovy-3/jdk21/Dockerfile)
+    * [jdk21-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-3/jdk21-alpine/Dockerfile)
+* Groovy 4
+    * [jdk8](https://github.com/groovy/docker-groovy/blob/master/groovy-4/jdk8/Dockerfile)
+    * [jdk8-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-4/jdk8-alpine/Dockerfile)
+    * [jdk11](https://github.com/groovy/docker-groovy/blob/master/groovy-4/jdk11/Dockerfile)
+    * [jdk11-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-4/jdk11-alpine/Dockerfile)
+    * [jdk17](https://github.com/groovy/docker-groovy/blob/master/groovy-4/jdk17/Dockerfile)
+    * [jdk17-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-4/jdk17-alpine/Dockerfile)
+    * [jdk21](https://github.com/groovy/docker-groovy/blob/master/groovy-4/jdk21/Dockerfile)
+    * [jdk21-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-4/jdk21-alpine/Dockerfile)
+* Groovy 5
+    * [jdk11](https://github.com/groovy/docker-groovy/blob/master/groovy-5/jdk11/Dockerfile)
+    * [jdk11-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-5/jdk11-alpine/Dockerfile)
+    * [jdk17](https://github.com/groovy/docker-groovy/blob/master/groovy-5/jdk17/Dockerfile)
+    * [jdk17-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-5/jdk17-alpine/Dockerfile)
+    * [jdk21](https://github.com/groovy/docker-groovy/blob/master/groovy-5/jdk21/Dockerfile)
+    * [jdk21-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-5/jdk21-alpine/Dockerfile)
 
 ## What is Groovy?
 
@@ -70,10 +88,10 @@ Alternatively, you can specify this through the Grapes config, using `-D grape.c
 ## Instructions for a new Groovy release
 
 1. Run `update.sh <new Groovy version>` or `update.ps1 <new Groovy version>`.
-1. If a Groovy contributor did a release for the first time (his/her key added to https://downloads.apache.org/groovy/KEYS),
+2. If a Groovy contributor did a release for the first time (his/her key added to https://downloads.apache.org/groovy/KEYS),
 add the new key to the list of keys used for verification (this is quite infrequent).
-1. Commit and push the changes.
-1. Update [official-images](https://github.com/docker-library/official-images) (and [docs](https://github.com/docker-library/docs) if appropriate).
+3. Commit and push the changes.
+4. Update [official-images](https://github.com/docker-library/official-images) (and [docs](https://github.com/docker-library/docs) if appropriate).
 
 ---
 [![Build status badge](https://github.com/groovy/docker-groovy/workflows/GitHub%20CI/badge.svg)](https://github.com/groovy/docker-groovy/actions?query=workflow%3A%22GitHub+CI%22)

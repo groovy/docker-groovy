@@ -1,4 +1,7 @@
-@Grab(group='org.apache.commons', module='commons-lang3', version='3.13.0')
+@Grapes([
+    @Grab(group='org.apache.commons', module='commons-lang3', version='3.13.0')
+])
+
 import org.apache.commons.lang3.*
 
 File getGroovyRoot() {
