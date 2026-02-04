@@ -1,4 +1,6 @@
-# Not using Eclipse Adoptium because Grapes fail with TLS handshake errors
+# Not using Eclipse Adoptium because Maven Central requires elliptic curve ciphers not available in that image
+# causing Grapes to fail with TLS handshake errors
+
 FROM amazoncorretto:8-alpine3.23
 
 CMD ["groovysh"]
