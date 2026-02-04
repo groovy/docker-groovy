@@ -1,4 +1,4 @@
-FROM eclipse-temurin:11-jdk-alpine
+FROM eclipse-temurin:11-jdk-alpine-3.23
 
 CMD ["groovysh"]
 
