@@ -23,7 +23,7 @@ common="$(
 	EOC
 )"
 
-directories="$(
+mapfile -t directories < <(
 	git ls-tree -r --name-only "$commit" | jq --raw-input --null-input --raw-output '
 		# convert "git ls-tree" output to a list of directories that contain a Dockerfile
 		[
@@ -75,17 +75,13 @@ directories="$(
 				. # if all else fails, sort lexicographically
 			]
 		)
-		# escape for passing to the shell (safely)
-		| map(@sh)
-		| join(" ")
+		| .[]
 	'
-)"
-eval "directories=( $directories )"
+)
 
 
 for dir in "${directories[@]}"; do
-	# shellcheck disable=SC2001
-	dir="$(echo "$dir" | sed -e 's/[[:space:]]*$//')"
+	dir="${dir%"${dir##*[![:space:]]}"}"
 	if [ ! -d "$dir" ]; then
 		# skip directory that doesn't exist in this branch
 		continue
@@ -105,15 +101,15 @@ for dir in "${directories[@]}"; do
 	
 	# double-check that each version matches the first one for this major (they should all be updated in lock-step)
 	# declare -A firstVersions is not available in older bash, using variable indirection or assume bash 4+ (which is checked via declare -A usedTags)
-	: "${seenVersions[$majorVersion]:=$version}"
-	if [ "$version" != "${seenVersions[$majorVersion]}" ]; then
-		echo >&2 "error: $dir contains $version (compared to ${seenVersions[$majorVersion]} in other images of major version $majorVersion)"
+	: "${seenVersions["$majorVersion"]:=$version}"
+	if [ "$version" != "${seenVersions["$majorVersion"]}" ]; then
+		echo >&2 "error: $dir contains $version (compared to ${seenVersions["$majorVersion"]} in other images of major version $majorVersion)"
 		exit 1
 	fi
 
 	# Get the git commit for the specific directory
 	majorDir="${dir%%/*}"
-	commit="$(git log -1 --format='%H' -- "$majorDir")"
+	dirCommit="$(git log -1 --format='%H' -- "$majorDir")"
 
 	fromTag="${from##*:}"
 	suite="${fromTag%-jdk}"
@@ -167,18 +163,18 @@ for dir in "${directories[@]}"; do
 	actualTags=
 	for tag in "${tags[@]}"; do
 		tag="${tag#-}" # remove those errant hyphen prefixes mentioned above
-		if [ -z "$tag" ] || [ -n "${usedTags[$tag]:-}" ]; then
+		if [ -z "$tag" ] || [ -n "${usedTags["$tag"]:-}" ]; then
 			continue
 		fi
-		usedTags[$tag]=1
+		usedTags["$tag"]=1
 		actualTags="${actualTags:+$actualTags, }$tag"
 	done
 
 	# cache values to avoid excessive lookups for repeated base images
-	arches="${archesLookupCache[$from]:-}"
+	arches="${archesLookupCache["$from"]:-}"
 	if [ -z "$arches" ]; then
 		arches="$(bashbrew cat --format '{{ join ", " .TagEntry.Architectures }}' "https://github.com/docker-library/official-images/raw/HEAD/library/$from")"
-		archesLookupCache[$from]="$arches"
+		archesLookupCache["$from"]="$arches"
 	fi
 
 	cat <<-EOE
@@ -186,7 +182,7 @@ for dir in "${directories[@]}"; do
 		Tags: $actualTags
 		Architectures: $arches
 		$common
-		GitCommit: $commit
+		GitCommit: $dirCommit
 		Directory: $dir
 	EOE
 done
