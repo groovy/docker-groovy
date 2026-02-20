@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -o errexit -o nounset
 
-image=$1
-expectedGroovyVersion=$2
+image="${1:-}"
+expectedGroovyVersion="${2:-}"
 
-if [[ $(id -u) -eq "1000" ]]; then
+if [[ "$(id -u)" -eq "1000" ]]; then
     user="groovy"
     home="/home/groovy"
 else
