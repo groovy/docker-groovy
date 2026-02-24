@@ -5,8 +5,9 @@ $ErrorActionPreference = "Stop"
 
 $majorVersions = 3, 4, 5
 
+$tags = Invoke-RestMethod "https://api.github.com/repos/apache/groovy/tags?per_page=100"
+
 foreach ($version in $majorVersions) {
-    $tags = Invoke-RestMethod "https://api.github.com/repos/apache/groovy/tags?per_page=100"
     $match = $tags.name | Select-String -Pattern "GROOVY_${version}" | Select-Object -First 1
     
     if (-not $match) {
