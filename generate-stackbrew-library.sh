@@ -84,8 +84,7 @@ eval "directories=( $directories )"
 
 
 for dir in "${directories[@]}"; do
-	# shellcheck disable=SC2001
-	dir="$(echo "$dir" | sed -e 's/[[:space:]]*$//')"
+	dir="${dir%"${dir##*[![:space:]]}"}"
 	if [ ! -d "$dir" ]; then
 		# skip directory that doesn't exist in this branch
 		continue
