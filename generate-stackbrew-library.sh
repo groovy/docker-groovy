@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -o errexit -o nounset -o pipefail
 
+script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+source "$script_dir/version-utils.sh"
+
 # NOTE: run something like `git fetch origin` before this script to ensure all remote branch references are up-to-date!
 
 # usage: ./generate-stackbrew-library.sh > ../official-images/library/groovy
@@ -125,40 +128,34 @@ for dir in "${directories[@]}"; do
 
 	# build up a list of tags we want to assign this directory, then filter out ones we've already used (a major benefit of our priority sorting above)
 	tags=()
-	versions=(
-		# this assumes upstream's version numbers always have three parts - if that ever changes, this needs to become more complex
-		"$version"        # X.Y.Z
-		"${version%.*}"   # X.Y
-		"${version%.*.*}" # X
-		''                # this will lead to some tags that start with hyphen; we'll clean them up afterwards (it makes the logic easier to write correctly so we get all of "X.Y.Z-foo", "X.Y-foo", "X-foo", *and* "foo")
-	)
+	mapfile -t versions < <(groovy_tag_versions "$version")
 	tags+=( "${versions[@]/%/-$jdk${variant:+-$variant}}" ) # "X.Y.Z-jdkNN-alpine"
-	case "$variant" in
-		'')
-			tags+=( "${versions[@]/%/-$jdk-$suite}" ) # "X.Y.Z-jdkNN-noble"
+		case "$variant" in
+			'')
+				tags+=( "${versions[@]/%/-$jdk-$suite}" ) # "X.Y.Z-jdkNN-noble"
 
-			# Only add "latest" tag for Groovy 5
-			if [[ "$version" == 5.* ]]; then
-				tags+=( 'latest' )
-			fi
+				# Only add "latest" tag for Groovy 5
+				if [[ "$version" == 5.* ]]; then
+					tags+=( 'latest' )
+				fi
 
-			tags+=(
-				"${versions[@]/%/-jdk}" # "X.Y.Z-jdk"
-				"${versions[@]}" # "X.Y.Z"
-				"${versions[@]/%/-jdk-$suite}" # "X.Y.Z-jdk-noble"
-				"${versions[@]/%/-$suite}" # "X.Y.Z-noble"
-			)
-			;;
-		alpine)
-			tags+=(
-				"${versions[@]/%/-jdk-alpine}" # "X.Y.Z-jdk-alpine"
-				"${versions[@]/%/-alpine}" # "X.Y.Z-alpine"
-			)
-			if [[ "$version" == 5.* ]]; then
-				tags+=( 'alpine' )
-			fi
-			;;
-	esac
+				tags+=(
+					"${versions[@]/%/-jdk}" # "X.Y.Z-jdk"
+					"${versions[@]}" # "X.Y.Z"
+					"${versions[@]/%/-jdk-$suite}" # "X.Y.Z-jdk-noble"
+					"${versions[@]/%/-$suite}" # "X.Y.Z-noble"
+				)
+				;;
+			alpine)
+				tags+=(
+					"${versions[@]/%/-jdk-alpine}" # "X.Y.Z-jdk-alpine"
+					"${versions[@]/%/-alpine}" # "X.Y.Z-alpine"
+				)
+				if [[ "$version" == 5.* ]]; then
+					tags+=( 'alpine' )
+				fi
+				;;
+		esac
 
 	actualTags=
 	for tag in "${tags[@]}"; do
@@ -169,6 +166,9 @@ for dir in "${directories[@]}"; do
 		usedTags["$tag"]=1
 		actualTags="${actualTags:+$actualTags, }$tag"
 	done
+	if [ -z "$actualTags" ]; then
+		continue
+	fi
 
 	# cache values to avoid excessive lookups for repeated base images
 	arches="${archesLookupCache["$from"]:-}"

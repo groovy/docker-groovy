@@ -3,7 +3,9 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-$majorVersions = 3, 4, 5
+. "$PSScriptRoot\version-utils.ps1"
+
+$majorVersions = 3, 4, 5, 6
 
 $tags = Invoke-RestMethod "https://api.github.com/repos/apache/groovy/tags?per_page=100"
 
@@ -15,7 +17,7 @@ foreach ($version in $majorVersions) {
         continue
     }
 
-    $groovyVersion = $match.ToString().replace("GROOVY_", "").replace("_", ".")
+    $groovyVersion = ConvertTo-GroovyVersion $match.ToString()
     
     Write-Host "Updating Groovy ${version} to ${groovyVersion}"
     
