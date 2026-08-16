@@ -1,6 +1,7 @@
 #!/usr/bin/env pwsh
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
+. "$PSScriptRoot\version-utils.ps1"
 
 # NOTE: run something like `git fetch origin` before this script to ensure all remote branch references are up-to-date!
 
@@ -92,40 +93,34 @@ foreach ($dir in $directories) {
     }
 
     $tags = @()
-    $versions = @(
-        "$version",
-        "$($version -replace '\.\d+$')",
-        "$($version -replace '\.\d+\.\d+$')",
-        ''
-    )
-
+    [string[]] $versions = @(Get-GroovyTagVersions $version)
     $tags += $versions | ForEach-Object {
-        if ($variant) {
-            "$_-$jdk-$variant"
-        } else {
-            "$_-$jdk"
-        }
+            if ($variant) {
+                "$_-$jdk-$variant"
+            } else {
+                "$_-$jdk"
+            }
     }
 
-    switch ($variant) {
-        '' {
-            $tags += $versions | ForEach-Object { "$_-$jdk-$suite" }
-            if ($version -match "^5\.") {
-                $tags += 'latest'
+        switch ($variant) {
+            '' {
+                $tags += $versions | ForEach-Object { "$_-$jdk-$suite" }
+                if ($version -match "^5\.") {
+                    $tags += 'latest'
+                }
+                $tags += $versions | ForEach-Object { "$_-jdk" }
+                $tags += $versions
+                $tags += $versions | ForEach-Object { "$_-jdk-$suite" }
+                $tags += $versions | ForEach-Object { "$_-$suite" }
             }
-            $tags += $versions | ForEach-Object { "$_-jdk" }
-            $tags += $versions
-            $tags += $versions | ForEach-Object { "$_-jdk-$suite" }
-            $tags += $versions | ForEach-Object { "$_-$suite" }
-        }
-        'alpine' {
-            $tags += $versions | ForEach-Object { "$_-jdk-alpine" }
-            $tags += $versions | ForEach-Object { "$_-alpine" }
-            if ($version -match "^5\.") {
-                $tags += 'alpine'
+            'alpine' {
+                $tags += $versions | ForEach-Object { "$_-jdk-alpine" }
+                $tags += $versions | ForEach-Object { "$_-alpine" }
+                if ($version -match "^5\.") {
+                    $tags += 'alpine'
+                }
             }
         }
-    }
 
     $actualTags = @()
     foreach ($tag in $tags) {
@@ -137,6 +132,9 @@ foreach ($dir in $directories) {
         $actualTags += $tag
     }
     $actualTagsString = $actualTags -join ', '
+    if (-not $actualTagsString) {
+        continue
+    }
 
     # Cache values to avoid excessive lookups for repeated base images
     $arches = $archesLookupCache[$from]
