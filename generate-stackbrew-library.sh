@@ -18,6 +18,37 @@ cat <<-'EOH'
 EOH
 
 declare -A usedTags=() archesLookupCache=() seenVersions=()
+
+get_bashbrew_architectures() {
+	local image="$1"
+	local max_attempts=5
+	local delay_seconds=2
+	local attempt output exit_code error_details
+	local standard_error_file
+	standard_error_file="$(mktemp)"
+
+	for (( attempt = 1; attempt <= max_attempts; attempt++ )); do
+		if output="$(bashbrew cat --format '{{ join ", " .TagEntry.Architectures }}' "https://github.com/docker-library/official-images/raw/HEAD/library/$image" 2>"$standard_error_file")"; then
+			rm -f -- "$standard_error_file"
+			printf '%s\n' "$output"
+			return 0
+		else
+			exit_code="$?"
+		fi
+
+		error_details="$(<"$standard_error_file")"
+		if (( attempt == max_attempts )); then
+			rm -f -- "$standard_error_file"
+			printf >&2 "error: failed to fetch architectures for '%s' after %d attempts: %s\n" "$image" "$max_attempts" "$error_details"
+			return "$exit_code"
+		fi
+
+		printf >&2 "warning: failed to fetch architectures for '%s' (attempt %d of %d); retrying in %d seconds\n" "$image" "$attempt" "$max_attempts" "$delay_seconds"
+		sleep "$delay_seconds"
+		delay_seconds=$(( delay_seconds * 2 ))
+	done
+}
+
 commit="$(git rev-parse HEAD)"
 branch="$(git rev-parse --abbrev-ref HEAD)"
 common="$(
@@ -173,7 +204,7 @@ for dir in "${directories[@]}"; do
 	# cache values to avoid excessive lookups for repeated base images
 	arches="${archesLookupCache["$from"]:-}"
 	if [ -z "$arches" ]; then
-		arches="$(bashbrew cat --format '{{ join ", " .TagEntry.Architectures }}' "https://github.com/docker-library/official-images/raw/HEAD/library/$from")"
+		arches="$(get_bashbrew_architectures "$from")"
 		archesLookupCache["$from"]="$arches"
 	fi
 

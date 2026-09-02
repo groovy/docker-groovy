@@ -16,6 +16,50 @@ GitRepo: https://github.com/groovy/docker-groovy.git
 $usedTags = @{}
 $archesLookupCache = @{}
 
+function Get-BashbrewArchitectures {
+    param(
+        [Parameter(Mandatory)]
+        [string] $Image,
+
+        [int] $MaxAttempts = 5,
+
+        [int] $InitialDelaySeconds = 2
+    )
+
+    for ($attempt = 1; $attempt -le $MaxAttempts; $attempt++) {
+        $standardErrorFile = [System.IO.Path]::GetTempFileName()
+        try {
+            $invocationError = $null
+            try {
+                $output = bashbrew cat --format '{{ join `, ` .TagEntry.Architectures }}' "https://github.com/docker-library/official-images/raw/HEAD/library/$Image" 2> $standardErrorFile
+                $exitCode = $LASTEXITCODE
+            } catch {
+                $invocationError = $_
+                $exitCode = $LASTEXITCODE
+            }
+
+            if ($exitCode -eq 0) {
+                return (($output -join [Environment]::NewLine).Trim())
+            }
+
+            $errorDetails = (Get-Content -Raw $standardErrorFile).Trim()
+            if (-not $errorDetails) {
+                $errorDetails = if ($invocationError) { $invocationError.Exception.Message } else { "bashbrew exited with code $exitCode" }
+            }
+
+            if ($attempt -eq $MaxAttempts) {
+                throw "Failed to fetch architectures for '$Image' after $MaxAttempts attempts: $errorDetails"
+            }
+
+            $delaySeconds = $InitialDelaySeconds * [Math]::Pow(2, $attempt - 1)
+            Write-Warning "Failed to fetch architectures for '$Image' (attempt $attempt of $MaxAttempts). Retrying in $delaySeconds seconds."
+            Start-Sleep -Seconds $delaySeconds
+        } finally {
+            Remove-Item -LiteralPath $standardErrorFile -Force -ErrorAction SilentlyContinue
+        }
+    }
+}
+
 $commit = git rev-parse HEAD
 $branch = git rev-parse --abbrev-ref HEAD
 $common = @"
@@ -139,8 +183,7 @@ foreach ($dir in $directories) {
     # Cache values to avoid excessive lookups for repeated base images
     $arches = $archesLookupCache[$from]
     if (-not $arches) {
-        # Using backtick as delimiter in Go template avoids issues with comma in join function
-        $arches = (bashbrew cat --format '{{ join `, ` .TagEntry.Architectures }}' "https://github.com/docker-library/official-images/raw/HEAD/library/$from")
+        $arches = Get-BashbrewArchitectures -Image $from
         $archesLookupCache[$from] = $arches
     }
 
