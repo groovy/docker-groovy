@@ -28,6 +28,7 @@ jobs:
           - jdk11
           - jdk17
           - jdk21
+          - jdk25
         variant:
           - ''
           - '-alpine'

@@ -11,6 +11,8 @@
     * [jdk17-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-3/jdk17-alpine/Dockerfile)
     * [jdk21](https://github.com/groovy/docker-groovy/blob/master/groovy-3/jdk21/Dockerfile)
     * [jdk21-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-3/jdk21-alpine/Dockerfile)
+    * [jdk25](https://github.com/groovy/docker-groovy/blob/master/groovy-3/jdk25/Dockerfile)
+    * [jdk25-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-3/jdk25-alpine/Dockerfile)
 * Groovy 4
     * [jdk8](https://github.com/groovy/docker-groovy/blob/master/groovy-4/jdk8/Dockerfile)
     * [jdk8-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-4/jdk8-alpine/Dockerfile)
@@ -20,6 +22,8 @@
     * [jdk17-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-4/jdk17-alpine/Dockerfile)
     * [jdk21](https://github.com/groovy/docker-groovy/blob/master/groovy-4/jdk21/Dockerfile)
     * [jdk21-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-4/jdk21-alpine/Dockerfile)
+    * [jdk25](https://github.com/groovy/docker-groovy/blob/master/groovy-4/jdk25/Dockerfile)
+    * [jdk25-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-4/jdk25-alpine/Dockerfile)
 * Groovy 5
     * [jdk11](https://github.com/groovy/docker-groovy/blob/master/groovy-5/jdk11/Dockerfile)
     * [jdk11-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-5/jdk11-alpine/Dockerfile)
@@ -27,6 +31,15 @@
     * [jdk17-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-5/jdk17-alpine/Dockerfile)
     * [jdk21](https://github.com/groovy/docker-groovy/blob/master/groovy-5/jdk21/Dockerfile)
     * [jdk21-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-5/jdk21-alpine/Dockerfile)
+    * [jdk25](https://github.com/groovy/docker-groovy/blob/master/groovy-5/jdk25/Dockerfile)
+    * [jdk25-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-5/jdk25-alpine/Dockerfile)
+* Groovy 6
+    * [jdk17](https://github.com/groovy/docker-groovy/blob/master/groovy-6/jdk17/Dockerfile)
+    * [jdk17-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-6/jdk17-alpine/Dockerfile)
+    * [jdk21](https://github.com/groovy/docker-groovy/blob/master/groovy-6/jdk21/Dockerfile)
+    * [jdk21-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-6/jdk21-alpine/Dockerfile)
+    * [jdk25](https://github.com/groovy/docker-groovy/blob/master/groovy-6/jdk25/Dockerfile)
+    * [jdk25-alpine](https://github.com/groovy/docker-groovy/blob/master/groovy-6/jdk25-alpine/Dockerfile)
 
 ## What is Groovy?
 
